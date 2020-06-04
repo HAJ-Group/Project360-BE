@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model implements Authenticatable
 {
-
     use Auth;
     /**
      * The attributes that are mass assignable.
