@@ -7,9 +7,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Model implements Authenticatable
+class Account extends Model implements Authenticatable
 {
-
     use Auth;
     /**
      * The attributes that are mass assignable.
@@ -17,7 +16,7 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'password',
+        'username', 'email', 'firstName', 'lastName', 'birthday', 'phone', 'address', 'city', 'photo',  'password',
     ];
 
     /**
