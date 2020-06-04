@@ -6,14 +6,18 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class UserController extends Controller
+class VisitorController extends Controller
 {
 
-    function authenticate(Request $request) {
+    function subscribe(Request $request) {
 
         $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'email' => 'required',
+            'birthday' => 'required',
+            'address' => 'required',
+            'city' => 'required',
         ]);
 
         $user = User::where('username', $request->input('username'))->first();
@@ -28,13 +32,6 @@ class UserController extends Controller
             return response()->json('Failed', 401);
         }
 
-    }
-
-    function subscribe(Request $request) {
-
-    }
-    function test() {
-        return response()->json("test");
     }
 
 }
