@@ -19,4 +19,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     //LOGIN
     $router->post('login', ['uses' => 'UserController@authenticate']);
 
+    $router->group(['prefix' => 'user'], function () use ($router){
+
+    });
 });
