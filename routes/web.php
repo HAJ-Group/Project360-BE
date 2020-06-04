@@ -18,5 +18,6 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
     //LOGIN
     $router->post('login', ['uses' => 'AccountController@authenticate']);
-
+    //SUBSCRIBE
+    $router->post('subscribe', ['uses' => 'AccountController@subscribe']);
 });

@@ -17,7 +17,7 @@ class Account extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'password',
+        'username', 'email', 'firstName', 'lastName', 'birthday', 'phone', 'address', 'city', 'photo',  'password',
     ];
 
     /**
