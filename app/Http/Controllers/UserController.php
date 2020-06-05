@@ -6,7 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class AccountController extends Controller {
+class UserController extends Controller {
 
     function authenticate(Request $request) {
         $this->validate($request, [
@@ -26,13 +26,7 @@ class AccountController extends Controller {
 
     function subscribe(Request $request) {
         $this->validate($request, [
-            'username' => 'required|unique:accounts',
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'email' => 'required|unique:accounts',
-            'birthday' => 'required',
-            'address' => 'required',
-            'city' => 'required',
+            'username' => 'required|unique:users',
             'password' => 'required',
         ]);
         $account = User::create($request->all());
