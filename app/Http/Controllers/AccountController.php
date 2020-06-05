@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Account;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -13,11 +13,11 @@ class AccountController extends Controller {
             'username' => 'required',
             'password' => 'required',
         ]);
-        $account = Account::where('username', $request->input('username'))->first();
+        $account = User::where('username', $request->input('username'))->first();
         if ($account->password === $request->input('password')) {
             $token = base64_encode(Str::random(40));
-            Account::where('username', $request->input('username'))->update(['token' => $token]);
-            return response()->json(Account::where('username', $request->input('username'))->first());
+            User::where('username', $request->input('username'))->update(['token' => $token]);
+            return response()->json(User::where('username', $request->input('username'))->first());
         }
         else {
             return response()->json('Failed', 401);
@@ -35,9 +35,9 @@ class AccountController extends Controller {
             'city' => 'required',
             'password' => 'required',
         ]);
-        $account = Account::create($request->all());
+        $account = User::create($request->all());
         $token = base64_encode(Str::random(40));
-        Account::where('username', $account->username)->update(['token' => $token]);
+        User::where('username', $account->username)->update(['token' => $token]);
         return response()->json([$account, 'token' => $token]);
     }
 
