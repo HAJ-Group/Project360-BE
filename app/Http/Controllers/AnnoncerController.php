@@ -24,14 +24,14 @@ class AnnoncerController extends Controller
      */
     public function index()
     {
-      $user = new User();
+   /*   $user = new User();
         $user->username = 'rhita';
         $user->password = 'rhita12345';
-        $user->token = base64_encode(Str::random(40));
+        $user->token = Str::random(40);
         $user->role = '2';
         $user->active = 1;
         $user->save();
-        return $user;
+        return $user;*/
         return response()->json(['status' => 'success', 'data', Annoncer::all(), 200]);
     }
 
@@ -49,9 +49,8 @@ class AnnoncerController extends Controller
         if ($validation->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
         }
-//        return $request->all();
         $user = Auth::user();
-        $annoncer = $this->annoncerFromRequest($request, new Annoncer());
+        $annoncer = Annoncer::create($request->all());
         //link between User & Annoncer
 
         $annoncer->user()->associate($user);
@@ -68,9 +67,8 @@ class AnnoncerController extends Controller
      * @param  \App\Annoncer  $annoncer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Annoncer $annoncer)
     {
-        $annoncer = Annoncer::findOrFail($id);
         if (empty($annoncer)) {
             return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
         }
@@ -86,10 +84,9 @@ class AnnoncerController extends Controller
      * @param  \App\Annoncer  $annoncer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Annoncer $annoncer)
     {
 
-        $annoncer = Annoncer::findOrFail($id);
         if (empty($annoncer)) {
             return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
         }
@@ -115,9 +112,8 @@ class AnnoncerController extends Controller
      * @param  \App\Annoncer  $annoncer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Annoncer $annoncer)
     {
-        $annoncer = Annoncer::findOrFail($id);
         if (empty($annoncer)) {
             return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
         } elseif ($annoncer->delete()) {
@@ -127,10 +123,6 @@ class AnnoncerController extends Controller
         }
     }
 
-
-    public function getAnnonces(){
-        return response()->json(['status' => 'success', 'data' => Auth::user()->annoncer->annonces], 200);
-    }
     private function validateRequest(Request $request)
     {
         return Validator::make($request->all(), [
