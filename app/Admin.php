@@ -2,21 +2,17 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable as Auth;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-
-class User extends Model implements Authenticatable
+class Admin extends Model
 {
-    use Auth;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'username', 'password', 'role',  'active',
+        'first_name', 'last_name', 'email', 'phone', 'address', 'city', 'date_of_birth', 'super'
     ];
 
     /**
@@ -25,12 +21,9 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
     ];
 
-    // RELATIONS
-
-    public function admin() {
-        return $this->hasOne('App\Admin');
+    public function user() {
+        return $this->belongsTo('App\User');
     }
 }
