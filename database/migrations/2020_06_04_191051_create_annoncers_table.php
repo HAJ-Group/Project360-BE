@@ -16,7 +16,6 @@ class CreateAnnoncersTable extends Migration
         Schema::create('annoncers', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
-
             $table->bigIncrements('id');
             $table->string('last_name', 100);
             $table->string('first_name', 100);
