@@ -34,9 +34,12 @@ class AdminController extends Controller {
 
     function create(Request $request) {
         $current_account =  Auth::user();
+
         if($current_account->role === '1') {
             $current_admin = $current_account->admin()->first();
+            // super admin action
             if($current_admin->super == '1') {
+                // validating input data
                 $this->validate($request, [
                     'username' => 'required|unique:users',
                     'password' => 'required',
@@ -45,16 +48,44 @@ class AdminController extends Controller {
                     'email' => 'required|unique:admins',
                     'address' => 'required',
                 ]);
+                // inserting data into users and admins table
                 $admin = Admin::create($request->all());
-                $account = User::create(['username' => $request->username, 'password' => $request->password, 'role' => '1']);
+                $account = User::create([
+                    'username' => $request->username,
+                    'password' => password_hash($request->password, PASSWORD_DEFAULT),
+                    'role' => '1'
+                ]);
+                // updating token
                 $token = base64_encode(Str::random(40));
                 User::where('username', $account->username)->update(['token' => $token]);
+                // Link users table with admins table with current foreign key
                 $account->admin()->save($admin);
                 return response()->json([$account, 'token' => $token, $admin]);
             }
         }
         return response()->json('You have no right to create a new admin', 401);
     }
+
+    /*function superCreate(Request $request) {
+        $this->validate($request, [
+            'username' => 'required|unique:users',
+            'password' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|unique:admins',
+            'address' => 'required',
+        ]);
+        $admin = Admin::create($request->all());
+        $account = User::create([
+            'username' => $request->username,
+            'password' => password_hash($request->password, PASSWORD_DEFAULT),
+            'role' => '1'
+        ]);
+        $token = base64_encode(Str::random(40));
+        User::where('username', $account->username)->update(['token' => $token]);
+        $account->admin()->save($admin);
+        return response()->json([$account, 'token' => $token, $admin]);
+    }*/
 
     function update(Request $request) {
 
