@@ -16,9 +16,16 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-    //LOGIN
+
     $router->post('login', ['uses' => 'UserController@authenticate']);
-    $router->post('subscribe', ['uses' => 'UserController@subscribe']);
-    //SUBSCRIBE
+
+});
+
+$router->group(['prefix' => 'admin'], function () use ($router) {
+
+    $router->post('create', ['uses' => 'AdminController@create']);
+    $router->get('update', ['uses' => 'AdminController@update']);
+    $router->get('admins', ['uses' => 'AdminController@all']);
+    $router->get('get', ['uses' => 'AdminController@get']);
 
 });
