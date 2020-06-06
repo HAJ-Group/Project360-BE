@@ -13,14 +13,14 @@ class UserController extends Controller {
             'username' => 'required',
             'password' => 'required',
         ]);
-        $account = User::where('username', $request->input('username'))->first();
-        if ($account->password === $request->input('password')) {
+        $account = User::where('username', $request->username)->first();
+        if ($request->password === $account->password) {
             $token = base64_encode(Str::random(40));
-            User::where('username', $request->input('username'))->update(['token' => $token]);
-            return response()->json(User::where('username', $request->input('username'))->first());
+            User::where('username', $request->username)->update(['token' => $token]);
+            return response()->json(User::where('username', $request->username)->first());
         }
         else {
-            return response()->json('Failed', 401);
+            return response()->json($account->password, 401);
         }
     }
 
