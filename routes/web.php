@@ -22,19 +22,19 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
         $router->get('/', 'AnnoncerController@index');
+        $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
         $router->post('/', 'AnnoncerController@store');
         $router->get('/{id}', 'AnnoncerController@show');
         $router->put('/{id}', 'AnnoncerController@update');
         $router->delete('/{id}', 'AnnoncerController@destroy');
-        $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
     });
 
     $router->group(['prefix' => 'annonce'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
         $router->post('/', 'AnnonceController@store');
-        $router->get('/{annonce}', 'AnnonceController@show');
-        $router->put('/{annonce}', 'AnnonceController@update');
-        $router->delete('/{annonce}', 'AnnonceController@destroy');
+        $router->get('/{id}', 'AnnonceController@show');
+        $router->put('/{id}', 'AnnonceController@update');
+        $router->delete('/{id}', 'AnnonceController@destroy');
     });
 });
 

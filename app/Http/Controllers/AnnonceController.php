@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AnnonceController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,15 +32,18 @@ class AnnonceController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    private function store(Request $request)
+    public function store(Request $request)
     {
+//        return $request->all();
         $validation = $this->validateRequest($request);
 
         if ($validation->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
         }
         $annoncer = Auth::user()->annoncer;
-        $annonce = Annonce::create($request->all());
+
+        $annonce = $this->annonceFromRequest($request, new Annonce());
+
         //link between User & Annonce
 
         $annonce->annoncer()->associate($annoncer);
@@ -52,13 +60,14 @@ class AnnonceController extends Controller
      * @param  \App\Annonce  $annonce
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Annonce $annonce)
+    public function show($id)
     {
-        if (empty($annoncer)) {
+        $annonce = Annonce::findOrFail($id);
+        if (empty($annonce)) {
             return response()->json(['status' => 'error', 'message' => 'the annonce is not found'], 404);
         }
 
-        return response()->json(['status' => 'success', 'data' => $annoncer], 200);
+        return response()->json(['status' => 'success', 'data' => $annonce], 200);
     }
 
 
@@ -69,8 +78,9 @@ class AnnonceController extends Controller
      * @param  \App\Annonce  $annonce
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Annonce $annonce)
+    public function update(Request $request, $id)
     {
+        $annonce = Annonce::findOrFail($id);
         if (empty($annonce)) {
             return response()->json(['status' => 'error', 'message' => 'the annonce is not found'], 404);
         }
@@ -96,8 +106,9 @@ class AnnonceController extends Controller
      * @param  \App\Annonce  $annonce
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Annonce $annonce)
+    public function destroy($id)
     {
+        $annonce = Annonce::findOrFail($id);
         if (empty($annonce)) {
             return response()->json(['status' => 'error', 'message' => 'the annonce is not found'], 404);
         } elseif ($annonce->delete()) {
@@ -118,6 +129,7 @@ class AnnonceController extends Controller
         $annonce->position_map = $request->position_map;
         $annonce->status = $request->status;
         $annonce->rent = $request->rent;
+        return $annonce;
     }
 
     private function validateRequest(Request $request)
