@@ -24,7 +24,7 @@ class CreateAnnoncersTable extends Migration
             $table->string('city', 100);
             $table->string('email', 100);
             $table->string('picture',100);
-            $table->dateTime('date_of_birth');
+            $table->date('date_of_birth');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

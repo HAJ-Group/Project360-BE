@@ -23,9 +23,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
         $router->get('/', 'AnnoncerController@index');
         $router->post('/', 'AnnoncerController@store');
-        $router->get('/{annoncer}', 'AnnoncerController@show');
-        $router->put('/{annoncer}', 'AnnoncerController@update');
-        $router->delete('/{annoncer}', 'AnnoncerController@destroy');
+        $router->get('/{id}', 'AnnoncerController@show');
+        $router->put('/{id}', 'AnnoncerController@update');
+        $router->delete('/{id}', 'AnnoncerController@destroy');
+        $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
     });
 
     $router->group(['prefix' => 'annonce'], function () use ($router) {

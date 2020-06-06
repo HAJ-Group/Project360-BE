@@ -55,7 +55,7 @@ class AnnonceController extends Controller
     public function show(Annonce $annonce)
     {
         if (empty($annoncer)) {
-            return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
+            return response()->json(['status' => 'error', 'message' => 'the annonce is not found'], 404);
         }
 
         return response()->json(['status' => 'success', 'data' => $annoncer], 200);
