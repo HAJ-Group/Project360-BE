@@ -26,6 +26,6 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
     $router->post('create', ['uses' => 'AdminController@create']);
     $router->get('update', ['uses' => 'AdminController@update']);
     $router->get('admins', ['uses' => 'AdminController@all']);
-    $router->get('get', ['uses' => 'AdminController@get']);
+    $router->get('profile', ['uses' => 'AdminController@profile']);
 
 });
