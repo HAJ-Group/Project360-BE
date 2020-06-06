@@ -20,7 +20,7 @@ class UserController extends Controller {
             return response()->json(User::where('username', $request->username)->first());
         }
         else {
-            return response()->json($account->password, 401);
+            return response()->json('Failed', 401);
         }
     }
 

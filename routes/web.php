@@ -18,7 +18,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('login', ['uses' => 'UserController@authenticate']);
-
+    $router->post('subscribe', ['uses' => 'UserController@subscribe']);
 
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
         $router->get('/', 'AnnoncerController@index');
