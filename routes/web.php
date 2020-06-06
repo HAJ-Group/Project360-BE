@@ -19,6 +19,22 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('login', ['uses' => 'UserController@authenticate']);
 
+
+    $router->group(['prefix' => 'annoncer'], function () use ($router) {
+        $router->get('/', 'AnnoncerController@index');
+        $router->post('/', 'AnnoncerController@store');
+        $router->get('/{annoncer}', 'AnnoncerController@show');
+        $router->put('/{annoncer}', 'AnnoncerController@update');
+        $router->delete('/{annoncer}', 'AnnoncerController@destroy');
+    });
+
+    $router->group(['prefix' => 'annonce'], function () use ($router) {
+        $router->get('/', 'AnnonceController@index');
+        $router->post('/', 'AnnonceController@store');
+        $router->get('/{annonce}', 'AnnonceController@show');
+        $router->put('/{annonce}', 'AnnonceController@update');
+        $router->delete('/{annonce}', 'AnnonceController@destroy');
+    });
 });
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
