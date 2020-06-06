@@ -14,7 +14,7 @@ class UserController extends Controller {
             'password' => 'required',
         ]);
         $account = User::where('username', $request->username)->first();
-        if (password_verify($request->password, $account->password)) {
+        if ($request->password === $account->password) {
             $token = base64_encode(Str::random(40));
             User::where('username', $request->username)->update(['token' => $token]);
             return response()->json(User::where('username', $request->username)->first());
