@@ -1,9 +1,12 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmationEmail;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserController extends Controller {
@@ -32,18 +35,26 @@ class UserController extends Controller {
                 $token = base64_encode(Str::random(40));
                 if($using_email) {
                     User::where('email', $request->username)->update(['token' => $token]);
-                    return response()->json(User::where('email', $request->username)->first());
+                    if($account->active === 1) {
+                        return response()->json(User::where('email', $request->username)->first()->token);
+                    } else {
+                        return response()->json('Email is not confirmed!', 401);
+                    }
                 }
                 else {
                     User::where('username', $request->username)->update(['token' => $token]);
-                    return response()->json(User::where('username', $request->username)->first());
+                    if($account->active === 1) {
+                        return response()->json(User::where('username', $request->username)->first()->token);
+                    } else {
+                        return response()->json('Email is not confirmed! Check your mail for confirmation', 401);
+                    }
                 }
             }
             else {
                 return response()->json('Failed', 401);
             }
         } else {
-            return response()->json('Username is not valid', 401);
+            return response()->json('Account not found', 401);
         }
     }
 
@@ -69,10 +80,30 @@ class UserController extends Controller {
             $token = base64_encode(Str::random(40));
             // Update token and hashing password
             User::where('username', $account->username)->update(['token' => $token, 'password' => password_hash($account->password, 1)]);
-            return response()->json([$account, 'token' => $token]);
+            // Sending mail confirmation
+            $this->sendEmailConfirmation($account->id);
+            return response()->json([$account]);
         } else {
             return response()->json('Passwords not match', 401);
         }
+    }
+
+    function sendEmailConfirmation($account_id) {
+        $account = User::find($account_id);
+        $_SESSION['username'] = $account->username;
+        $_SESSION['code'] = rand ( 10000 , 99999 );
+        User::where('username', $account->username)->update(['code' => $_SESSION['code']]);
+        Mail::to($account->email)->send(new ConfirmationEmail());
+    }
+
+    function confirmEmail($username, $code) {
+        $account = User::where('username', $username)->first();
+        if($account->code === null) return response()->json('Something wrong resend email verification', 401);
+        if($account->code === $code) {
+            User::where('username', $username)->update(['active' => '1']);
+            return response()->json('Email is confirmed successfully!');
+        }
+        return response()->json('Code is not correct', 401);
     }
 
 }
