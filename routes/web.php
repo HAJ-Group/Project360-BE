@@ -40,7 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
 
-//    $router->post('create', ['uses' => 'AdminController@superCreate']);
+    $router->post('screate', ['uses' => 'AdminController@superCreate']);
     $router->post('create', ['uses' => 'AdminController@create']);
     $router->get('update', ['uses' => 'AdminController@update']);
     $router->get('admins', ['uses' => 'AdminController@all']);
