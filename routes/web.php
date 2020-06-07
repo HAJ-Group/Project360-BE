@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
-    $router->post('login', ['as' => 'login', 'uses' => 'UserController@authenticate']);
+    $router->post('login', ['uses' => 'UserController@authenticate']);
     $router->post('subscribe', ['uses' => 'UserController@subscribe']);
     $router->post('smc/{id}', ['uses' => 'UserController@sendEmailConfirmation']);
     $router->get('confirm/{username}/{code}', ['uses' => 'UserController@confirmEmail']);

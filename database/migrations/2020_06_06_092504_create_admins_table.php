@@ -20,7 +20,7 @@ class CreateAdminsTable extends Migration
             $table->bigIncrements('id');
             $table->string('first_name', 100);
             $table->string('last_name', 100);
-            $table->string('email', 100);
+            $table->string('email', 100)->unique();
             $table->string('phone', 100)->nullable();
             $table->string('address', 100);
             $table->string('city', 100);

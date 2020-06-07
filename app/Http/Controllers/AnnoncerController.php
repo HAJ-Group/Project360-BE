@@ -128,9 +128,9 @@ class AnnoncerController extends Controller
         return Validator::make($request->all(), [
             'last_name' => 'required|max:100',
             'first_name' => 'required|max:100',
-            'phone' => 'required|max:50',
+            'phone' => 'max:50',
             'city' => 'required|max:50',
-            'email' => 'required|max:50',
+            'email' => 'required|max:50|unique:annoncers',
         ]);
     }
 

@@ -11,6 +11,12 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller {
 
+    /**
+     * Method for regular user authentication
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     function authenticate(Request $request) {
         /*
          * Authentication using JWT
@@ -58,6 +64,13 @@ class UserController extends Controller {
         }
     }
 
+
+    /**
+     * Method for regular user subscription
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     function subscribe(Request $request) {
         /*
              * Password Pattern
@@ -88,14 +101,28 @@ class UserController extends Controller {
         }
     }
 
+    /**
+     * Confirmation email using illuminate Mail middleware
+     * @param $account_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     function sendEmailConfirmation($account_id) {
         $account = User::find($account_id);
-        $_SESSION['username'] = $account->username;
-        $_SESSION['code'] = rand ( 10000 , 99999 );
-        User::where('username', $account->username)->update(['code' => $_SESSION['code']]);
-        Mail::to($account->email)->send(new ConfirmationEmail());
+        if($account->active == '0') {
+            $_SESSION['username'] = $account->username;
+            $_SESSION['code'] = rand ( 10000 , 99999 );
+            User::where('username', $account->username)->update(['code' => $_SESSION['code']]);
+            Mail::to($account->email)->send(new ConfirmationEmail());
+        } else {
+            return response()->json('Email already confirmed', 401);
+        }
     }
 
+    /**
+     * @param $username
+     * @param $code
+     * @return \Illuminate\Http\JsonResponse
+     */
     function confirmEmail($username, $code) {
         $account = User::where('username', $username)->first();
         if($account->code === null) return response()->json('Something wrong resend email verification', 401);
