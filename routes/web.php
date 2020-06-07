@@ -19,7 +19,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('login', ['uses' => 'UserController@authenticate']);
     $router->post('subscribe', ['uses' => 'UserController@subscribe']);
-    $router->post('smc/{id}', ['uses' => 'UserController@sendEmailConfirmation']);
+    $router->post('smc/{username}', ['uses' => 'UserController@sendEmailConfirmation']);
     $router->get('confirm/{username}/{code}', ['uses' => 'UserController@confirmEmail']);
 
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
@@ -42,7 +42,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
 
-    $router->post('screate', ['uses' => 'AdminController@superCreate']);
+//    $router->post('screate', ['uses' => 'AdminController@superCreate']);
     $router->post('create', ['uses' => 'AdminController@create']);
     $router->get('update', ['uses' => 'AdminController@update']);
     $router->get('admins', ['uses' => 'AdminController@all']);

@@ -94,7 +94,7 @@ class UserController extends Controller {
             // Update token and hashing password
             User::where('username', $account->username)->update(['token' => $token, 'password' => password_hash($account->password, 1)]);
             // Sending mail confirmation
-            $this->sendEmailConfirmation($account->id);
+            $this->sendEmailConfirmation($account->username);
             return response()->json([$account]);
         } else {
             return response()->json('Passwords not match', 401);
@@ -106,13 +106,14 @@ class UserController extends Controller {
      * @param $account_id
      * @return \Illuminate\Http\JsonResponse
      */
-    function sendEmailConfirmation($account_id) {
-        $account = User::find($account_id);
+    function sendEmailConfirmation($username) {
+        $account = User::where('username', $username)->first();
         if($account->active == '0') {
             $_SESSION['username'] = $account->username;
             $_SESSION['code'] = rand ( 10000 , 99999 );
             User::where('username', $account->username)->update(['code' => $_SESSION['code']]);
             Mail::to($account->email)->send(new ConfirmationEmail());
+            return response()->json('Email Confirmation sent');
         } else {
             return response()->json('Email already confirmed', 401);
         }
