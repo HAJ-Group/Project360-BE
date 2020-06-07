@@ -52,8 +52,7 @@ class AnnoncerController extends Controller
         $user = Auth::user();
         $annoncer = Annoncer::create($request->all());
         //link between User & Annoncer
-
-        $annoncer->user()->associate($user);
+        $user->annoncer()->save($annoncer);
         if ($annoncer->save()) {
             return response()->json(['status' => 'success', 'data' => $annoncer], 201);
         } else {
