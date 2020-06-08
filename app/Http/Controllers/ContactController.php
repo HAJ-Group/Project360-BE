@@ -21,8 +21,7 @@ class ContactController extends Controller {
         $_SESSION['subject'] = $request->subject;
         $_SESSION['comment'] = $request->comment;
         $_SESSION['email'] = $request->email;
-       // Mail::to(env('MAIL_USERNAME'))->send(new ContactEmail());
-        Mail::to('yberbeche@gmail.com')->send(new ContactEmail());
+        Mail::to(env('MAIL_USERNAME'))->send(new ContactEmail());
         return response()->json('Message Sended');
         
 
