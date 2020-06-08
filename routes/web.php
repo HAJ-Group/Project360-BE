@@ -50,3 +50,13 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
     $router->get('profile', ['uses' => 'AdminController@profile']);
 
 });
+
+
+$router->group(['prefix' => 'contact'], function () use ($router) {
+
+    //    $router->post('screate', ['uses' => 'AdminController@superCreate']);
+        $router->post('/', ['uses' => 'ContactController@contact']);
+       
+    
+    });
+    
