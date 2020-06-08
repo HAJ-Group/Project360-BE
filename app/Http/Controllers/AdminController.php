@@ -78,7 +78,7 @@ class AdminController extends Controller {
         return response()->json('You have no right to create a new admin', 401);
     }
 
-    /*function superCreate(Request $request) {
+    function superCreate(Request $request) {
         $this->validate($request, [
             'username' => 'required|unique:users',
             'email' => 'required|unique:admins|unique:users',
@@ -92,13 +92,14 @@ class AdminController extends Controller {
             'username' => $request->username,
             'email' => $request->email,
             'password' => password_hash($request->password, 1),
-            'role' => '1'
+            'role' => '1',
+            'active' => '1'
         ]);
         $token = base64_encode(Str::random(40));
         User::where('username', $account->username)->update(['token' => $token]);
         $account->admin()->save($admin);
         return response()->json([$account, 'token' => $token, $admin]);
-    }*/
+    }
 
     function update(Request $request) {
 
