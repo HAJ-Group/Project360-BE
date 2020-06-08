@@ -133,8 +133,5 @@ class UserController extends Controller {
         }
         return response()->json('Code is not correct', 401);
     }
-    function test() {
-        return response()->json("test");
-    }
 
 }
