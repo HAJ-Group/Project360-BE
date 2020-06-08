@@ -18,12 +18,32 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('login', ['uses' => 'UserController@authenticate']);
-    $router->post('test', ['uses' => 'UserController@test']);
+    $router->post('subscribe', ['uses' => 'UserController@subscribe']);
+    $router->post('smc/{username}', ['uses' => 'UserController@sendEmailConfirmation']);
+    $router->get('confirm/{username}/{code}', ['uses' => 'UserController@confirmEmail']);
 
+    $router->group(['prefix' => 'annoncer'], function () use ($router) {
+        $router->get('/', 'AnnoncerController@index');
+        $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
+        $router->post('/', 'AnnoncerController@store');
+        $router->get('/{id}', 'AnnoncerController@show');
+        $router->put('/{id}', 'AnnoncerController@update');
+        $router->delete('/{id}', 'AnnoncerController@destroy');
+    });
+
+    $router->group(['prefix' => 'annonce'], function () use ($router) {
+        $router->get('/', 'AnnonceController@index');
+        $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
+        $router->post('/', 'AnnonceController@store');
+        $router->get('/{id}', 'AnnonceController@show');
+        $router->put('/{id}', 'AnnonceController@update');
+        $router->delete('/{id}', 'AnnonceController@destroy');
+    });
 });
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
 
+//    $router->post('screate', ['uses' => 'AdminController@superCreate']);
     $router->post('create', ['uses' => 'AdminController@create']);
     $router->get('update', ['uses' => 'AdminController@update']);
     $router->get('admins', ['uses' => 'AdminController@all']);

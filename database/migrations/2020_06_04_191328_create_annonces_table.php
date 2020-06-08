@@ -27,6 +27,7 @@ class CreateAnnoncesTable extends Migration
             $table->string('position_map', 100)->nullable();
             $table->string('status', 100);
             $table->string('rent', 100);
+            $table->boolean('premium');
 
 
             $table->unsignedBigInteger('annoncer_id')->nullable();

@@ -16,7 +16,7 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'password', 'role',  'active',
+        'username', 'email', 'password', 'role',  'active',
     ];
 
     /**
@@ -30,6 +30,9 @@ class User extends Model implements Authenticatable
 
     // RELATIONS
 
+    public function annoncer() {
+        return $this->hasOne(Annoncer::class);
+    }
     public function admin() {
         return $this->hasOne('App\Admin');
     }
