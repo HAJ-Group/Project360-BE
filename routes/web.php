@@ -33,6 +33,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'annonce'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
+        $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
         $router->post('/', 'AnnonceController@store');
         $router->get('/{id}', 'AnnonceController@show');
         $router->put('/{id}', 'AnnonceController@update');
@@ -52,10 +53,6 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
 
 
 $router->group(['prefix' => 'contact'], function () use ($router) {
-
     //    $router->post('screate', ['uses' => 'AdminController@superCreate']);
         $router->post('/', ['uses' => 'ContactController@contact']);
-       
-    
-    });
-    
+});
