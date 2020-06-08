@@ -43,10 +43,15 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
 
-//    $router->post('screate', ['uses' => 'AdminController@superCreate']);
+    $router->post('screate', ['uses' => 'AdminController@superCreate']);
     $router->post('create', ['uses' => 'AdminController@create']);
     $router->get('update', ['uses' => 'AdminController@update']);
     $router->get('admins', ['uses' => 'AdminController@all']);
     $router->get('profile', ['uses' => 'AdminController@profile']);
 
+});
+
+
+$router->group(['prefix' => 'contact'], function () use ($router) {
+    $router->post('/', ['uses' => 'ContactController@contact']);
 });
