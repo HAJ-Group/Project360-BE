@@ -24,9 +24,10 @@ class AnnoncerController extends Controller
      */
     public function index()
     {
-   /*   $user = new User();
+    /* $user = new User();
         $user->username = 'rhita';
         $user->password = 'rhita12345';
+        $user->email = 'rhitaess@gmail.com';
         $user->token = Str::random(40);
         $user->role = '2';
         $user->active = 1;
