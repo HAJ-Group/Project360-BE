@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces']]);
     }
 
     /**
@@ -156,8 +156,6 @@ class AnnonceController extends Controller
             'title' => 'required|max:100',
             'type' => 'required|max:100',
             'description' => 'required|max:100000',
-            'price' => 'required',
-            'address' => 'required',
             'city' => 'required|max:50',
             'status' => 'required',
             'rent' => 'required|max:100',
