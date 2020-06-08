@@ -33,6 +33,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'annonce'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
+        $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
         $router->post('/', 'AnnonceController@store');
         $router->get('/{id}', 'AnnonceController@show');
         $router->put('/{id}', 'AnnonceController@update');

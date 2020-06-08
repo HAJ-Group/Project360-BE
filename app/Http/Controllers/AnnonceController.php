@@ -15,6 +15,7 @@ class AnnonceController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +23,23 @@ class AnnonceController extends Controller
      */
     public function index()
     {
-        return response()->json(['status' => 'success', 'data', Annonce::all(), 200]);
+        return response()->json(['status' => 'success', 'data', Annonce::where('premium', 0)->get(), 200]);
+    }
+
+
+    public function getPremiumAnnonces()
+    {
+        $annonces = Annonce::where('premium', 1)->get()->toArray();
+        $rows = count($annonces) % 2 == 0 ? count($annonces) / 2 : (count($annonces) / 2) + 1;
+        $tab = [];
+        $j = 0;
+        for($i = 0; $i<intval($rows); $i++ ){
+            $row = array_slice($annonces, $j, 2);
+            $tab[] = $row;
+            $j+=2;
+        }
+//        return $tab;
+        return response()->json(['status' => 'success', 'data', $tab , 200]);
     }
 
 
@@ -57,7 +74,7 @@ class AnnonceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Annonce  $annonce
+     * @param \App\Annonce $annonce
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -74,8 +91,8 @@ class AnnonceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Annonce  $annonce
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Annonce $annonce
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -103,7 +120,7 @@ class AnnonceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Annonce  $annonce
+     * @param \App\Annonce $annonce
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -129,6 +146,7 @@ class AnnonceController extends Controller
         $annonce->position_map = $request->position_map;
         $annonce->status = $request->status;
         $annonce->rent = $request->rent;
+        $annonce->premium = $request->premium;
         return $annonce;
     }
 
@@ -137,7 +155,7 @@ class AnnonceController extends Controller
         return Validator::make($request->all(), [
             'title' => 'required|max:100',
             'type' => 'required|max:100',
-            'description' => 'required',
+            'description' => 'required|max:100000',
             'price' => 'required',
             'address' => 'required',
             'city' => 'required|max:50',
