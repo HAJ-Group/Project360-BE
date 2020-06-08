@@ -53,10 +53,6 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
 
 
 $router->group(['prefix' => 'contact'], function () use ($router) {
-
     //    $router->post('screate', ['uses' => 'AdminController@superCreate']);
         $router->post('/', ['uses' => 'ContactController@contact']);
-       
-    
-    });
-    
+});
