@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Account;
+use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('api', function ($request) {
             if ($request->header('Authorization')) {
                 $key = explode(' ', $request->header('Authorization'));
-                $account = Account::where('token', $key[1])->first();
+                $account = User::where('token', $key[1])->first();
                 if (!empty($account)) {
                     $request->request->add(['user ID' => $account->id]);
                 }
