@@ -10,10 +10,10 @@ use Illuminate\Support\Str;
 
 class AdminController extends Controller {
 
-    function __construct()
+    /*function __construct()
     {
         $this->middleware('auth');
-    }
+    }*/
 
     function all() {
         $account = Auth::user();
