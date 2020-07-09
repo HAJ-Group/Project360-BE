@@ -15,7 +15,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImage']]);
     }
 
     /**
@@ -71,6 +71,23 @@ class AnnouncerAnnounceController extends Controller
             return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
+
+    }
+
+    public function storeImage(Request $request){
+        $uploadPath = "images";
+        $i = 1;
+        while ($request->hasFile('image'.$i)){
+            $file = $request->file('image' . $i);
+            $imageName = $file->getClientOriginalName();
+            $file->move($uploadPath, $imageName);
+            $i ++;
+        }
+
+        if ($i != 1 )
+            return Response()->json(['message' => 'images was uploaded successfully !']);
+        else
+            return Response()->json(['message' => 'An error has occurred !']);
 
     }
 
