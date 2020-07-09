@@ -16,7 +16,7 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password', 'role',  'active',
+        'username', 'email', 'password', 'role',  'active','provider_id',
     ];
 
     /**
@@ -25,8 +25,19 @@ class User extends Model implements Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'remember_token',
     ];
+
+    /**
+    * The attributes that should be cast to native types.
+    *
+    * @var array
+    */
+   protected $casts = [
+       'email_verified_at' => 'datetime',
+   ];
+
+
 
     // RELATIONS
 

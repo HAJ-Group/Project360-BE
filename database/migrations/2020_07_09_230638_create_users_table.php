@@ -22,6 +22,12 @@ class CreateUsersTable extends Migration
             $table->string('role')->default('2');
             $table->boolean('active')->default(0); // Account not active till email is confirmed
             $table->string('code')->nullable(); // Used for email confirmation
+           
+            $table->string('name');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->rememberToken();
+           
             $table->timestamps();
         });
     }
