@@ -17,7 +17,7 @@ class CreateImagesTable extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->bigIncrements('id');
-            $table->string('path');
+            $table->string('name');
             $table->string('type');
             $table->unsignedBigInteger('announce_id')->nullable();
             $table->foreign('announce_id')->references('id')->on('annonces');

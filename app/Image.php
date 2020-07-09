@@ -16,7 +16,7 @@ class Image extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'path', 'type', 'announce_id',
+        'name', 'type', 'announce_id',
     ];
 
     /**
