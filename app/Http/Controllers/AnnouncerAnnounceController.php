@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Annonce;
 use App\Annoncer;
+use App\Image;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class AnnouncerAnnounceController extends Controller
     public function store(Request $request, $username)
     {
 
-        // Finding the user using username
+        // Finding the user by username
         $user = User::where('username', $username)->first();
 
         if($user){
@@ -58,13 +59,15 @@ class AnnouncerAnnounceController extends Controller
                         'price' => $request->get('price'),
                         'address' => $request->get('address'),
                         'city' => $request->get('city'),
-                        'position_map' => $request->get('position_map'),
+                        'position_map' => $request->get('positionMap'),
                         'status' => $request->get('status'),
                         'rent' => $request->get('rent'),
                         'premium' => $announcer->premium,
                         'annoncer_id' => $announcer->id,
                     ]
                 );
+
+                $this->storeImages($request, $announce->id);
 
                 return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was created successfully and attached with the announcer {$announcer->id} "], 201);
             }
@@ -74,18 +77,40 @@ class AnnouncerAnnounceController extends Controller
 
     }
 
-    public function storeImage(Request $request){
+
+    public function storeImages(Request $request, $announce_id){
         $uploadPath = "images";
         $i = 1;
         while ($request->hasFile('image'.$i)){
+
+            /*--------- Storing image in public/images folder ---------*/
+
             $file = $request->file('image' . $i);
             $imageName = $file->getClientOriginalName();
             $file->move($uploadPath, $imageName);
+
+
+            /*--------- Storing the information of the image in the database ---------*/
+
+            // => Getting the extension of the image
+            $extension = $file->getClientOriginalExtension();
+            $imageType = 1;
+            if($extension == 'png' || $extension == 'jpeg' || $extension == 'gif')
+                $imageType = 2;
+
+            $image = Image::create(
+                [
+                    'name' => $imageName,
+                    'type' => $imageType,
+                    'announce_id' => $announce_id
+                ]
+            );
+
             $i ++;
         }
 
         if ($i != 1 )
-            return Response()->json(['message' => 'images was uploaded successfully !']);
+            return Response()->json(['message' => 'images was uploaded successfully and stored in the database !']);
         else
             return Response()->json(['message' => 'An error has occurred !']);
 
