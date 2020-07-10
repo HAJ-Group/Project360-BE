@@ -16,7 +16,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImage']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImages']]);
     }
 
     /**
@@ -67,7 +67,7 @@ class AnnouncerAnnounceController extends Controller
                     ]
                 );
 
-                $this->storeImages($request, $announce->id);
+                $this->storeImages($request, $username, $announce->id);
 
                 return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was created successfully and attached with the announcer {$announcer->id} "], 201);
             }
@@ -78,8 +78,8 @@ class AnnouncerAnnounceController extends Controller
     }
 
 
-    public function storeImages(Request $request, $announce_id){
-        $uploadPath = "images";
+    public function storeImages(Request $request, $username, $announce_id){
+        $uploadPath = "announces-images/" . $username . "/" . $announce_id;
         $i = 1;
         while ($request->hasFile('image'.$i)){
 
