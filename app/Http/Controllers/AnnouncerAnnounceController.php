@@ -16,7 +16,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index']]);
     }
 
     /**
@@ -24,8 +24,22 @@ class AnnouncerAnnounceController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index($username)
     {
+        // Finding the user by username
+        $user = User::where('username', $username)->first();
+
+        if($user){
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if($announcer){
+                $announces = $announcer->annonces;
+                return Response()->json($announces, 200);
+            }
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
+        }
+        return Response()->json(['error' => "the specific user does not exist "], 404);
 
     }
 
