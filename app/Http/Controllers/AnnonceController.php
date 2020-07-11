@@ -42,6 +42,11 @@ class AnnonceController extends Controller
         return response()->json(['status' => 'success', 'data', $tab , 200]);
     }
 
+    public function getUserAnnounces() {
+        $user = Auth::user();
+        $announcer = $user->annoncer;
+        return response()->json($announcer->annonces);
+    }
 
     /**
      * Store a newly created resource in storage.
