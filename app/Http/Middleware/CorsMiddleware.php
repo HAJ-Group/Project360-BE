@@ -15,7 +15,7 @@ class CorsMiddleware
      */
     public function handle($request, Closure $next)
     {
-/*        $headers = [
+       $headers = [
             'Access-Control-Allow-Origin'      => '*',
             'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Credentials' => 'true',
@@ -34,9 +34,10 @@ class CorsMiddleware
             $response->header($key, $value);
         }
 
-        return $response;*/
+        return $response;
 
-        $handle = $next($request);
+/*      enable downloading images for announces
+         $handle = $next($request);
 
         if(method_exists($handle, 'header'))
         {
@@ -45,6 +46,7 @@ class CorsMiddleware
                 ->header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With, Application');
         }
 
-        return $handle;
+        return $handle; */
+
     }
 }
