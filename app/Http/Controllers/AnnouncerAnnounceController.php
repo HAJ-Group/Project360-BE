@@ -10,13 +10,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use function count;
 
 class AnnouncerAnnounceController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages']]);
     }
 
     /**
@@ -35,12 +37,30 @@ class AnnouncerAnnounceController extends Controller
 
             if($announcer){
                 $announces = $announcer->annonces;
-                return Response()->json($announces, 200);
+                if(count($announces) > 0){
+
+                    foreach ($announces as $announce){
+                       $announce->images;
+                    }
+                    return Response()->json($announces, 200);
+                }
+                return Response()->json(['error' => "Does not exist any announce for this announcer"], 404);
             }
             return Response()->json(['error' => "the specific announcer does not exist "], 404);
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
 
+    }
+
+    /**
+     * download images for a specific announce the specified resource.
+     *
+     * @param $username
+     * @param $announce_id
+     * @return BinaryFileResponse
+     */
+    public function downloadImages(){
+        return Response()->download('1.png', 'image');
     }
 
 
@@ -116,7 +136,7 @@ class AnnouncerAnnounceController extends Controller
                 [
                     'name' => $imageName,
                     'type' => $imageType,
-                    'announce_id' => $announce_id
+                    'annonce_id' => $announce_id
                 ]
             );
 
@@ -129,6 +149,7 @@ class AnnouncerAnnounceController extends Controller
             return Response()->json(['message' => 'An error has occurred !']);
 
     }
+
 
     /**
      * Display the specified resource.
