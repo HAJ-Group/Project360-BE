@@ -117,7 +117,7 @@ class AnnouncerAnnounceController extends Controller
         $i = 1;
         while ($request->hasFile('image'.$i)){
 
-            /*--------- Storing image in public/images folder ---------*/
+            /*--------- Store image in public/images folder ---------*/
 
             $file = $request->file('image' . $i);
             $imageName = $file->getClientOriginalName();
