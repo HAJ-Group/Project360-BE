@@ -19,8 +19,8 @@ class CreateImagesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('type');
-            $table->unsignedBigInteger('announce_id')->nullable();
-            $table->foreign('announce_id')->references('id')->on('annonces');
+            $table->unsignedBigInteger('annonce_id')->nullable();
+            $table->foreign('annonce_id')->references('id')->on('annonces');
             $table->timestamps();
         });
     }
