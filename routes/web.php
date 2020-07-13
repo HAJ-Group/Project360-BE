@@ -35,11 +35,21 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
         $router->get('/user', 'AnnonceController@getUserAnnounces');
         $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
-        $router->post('/', 'AnnonceController@store');
+/*      $router->post('/', 'AnnonceController@store');
         $router->get('/{id}', 'AnnonceController@show');
         $router->put('/{id}', 'AnnonceController@update');
-        $router->delete('/{id}', 'AnnonceController@destroy');
+        $router->delete('/{id}', 'AnnonceController@destroy');*/
     });
+
+    $router->group(['prefix' => 'users/'], function () use ($router) {
+        $router->get('{username}/announces', 'AnnouncerAnnounceController@index');
+        $router->post('{username}/announces', 'AnnouncerAnnounceController@store');
+        $router->get('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@show');
+        $router->put('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@update');
+        $router->delete('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@destroy');
+    });
+
+
 });
 
 $router->group(['prefix' => 'admin'], function () use ($router) {
