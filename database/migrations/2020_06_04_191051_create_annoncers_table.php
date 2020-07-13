@@ -17,12 +17,12 @@ class CreateAnnoncersTable extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->bigIncrements('id');
-            $table->string('last_name', 100);
-            $table->string('first_name', 100);
+            $table->string('last_name', 100)->nullable();
+            $table->string('first_name', 100)->nullable();
             $table->string('phone', 100)->nullable();
-            $table->string('address', 100);
-            $table->string('city', 100);
-            $table->string('email', 100)->unique();
+            $table->string('address', 100)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('email', 100)->unique()->nullable();
             $table->string('picture',100)->nullable();
             $table->string('premium')->default('0');
             $table->date('date_of_birth')->nullable();
