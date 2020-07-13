@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Annonce;
-use App\Annoncer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
