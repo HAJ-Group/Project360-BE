@@ -18,16 +18,18 @@ class CreateAnnoncesTable extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
-            $table->string('title', 100);
-            $table->string('type', 100);
-            $table->string('description', 100);
+            $table->string('title', 100)->nullable();
+            $table->string('type', 100)->nullable();
+            $table->string('description', 100)->nullable();
             $table->double('price', 15, 8)->nullable();
             $table->string('address', 100)->nullable();
-            $table->string('city', 100);
+            $table->string('city', 100)->nullable();
             $table->string('position_map', 100)->nullable();
-            $table->string('status', 100);
-            $table->string('rent', 100);
-            $table->boolean('premium');
+            $table->string('status', 100)->nullable();
+            $table->string('rent', 100)->nullable();
+            $table->boolean('premium')->nullable();
+            $table->double('surface')->nullable();
+            $table->integer('pieces')->nullable();
 
 
             $table->unsignedBigInteger('annoncer_id')->nullable();

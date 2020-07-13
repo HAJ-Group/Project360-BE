@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters']]);
     }
 
     /**
@@ -23,7 +23,8 @@ class AnnonceController extends Controller
      */
     public function index()
     {
-        return response()->json(['status' => 'success', 'data', Annonce::where('premium', 0)->get(), 200]);
+        $annonces = Annonce::all();
+        return response()->json(['status' => 'success', 'data', $annonces, 200]);
     }
 
 
@@ -33,13 +34,13 @@ class AnnonceController extends Controller
         $rows = count($annonces) % 2 == 0 ? count($annonces) / 2 : (count($annonces) / 2) + 1;
         $tab = [];
         $j = 0;
-        for($i = 0; $i<intval($rows); $i++ ){
+        for ($i = 0; $i < intval($rows); $i++) {
             $row = array_slice($annonces, $j, 2);
             $tab[] = $row;
-            $j+=2;
+            $j += 2;
         }
 //        return $tab;
-        return response()->json(['status' => 'success', 'data', $tab , 200]);
+        return response()->json(['status' => 'success', 'data', $tab, 200]);
     }
 
 
@@ -135,6 +136,24 @@ class AnnonceController extends Controller
         }
     }
 
+    public function getAnnoncesByFilters(Request $request)
+    {
+
+        $annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
+            ->where('city', 'like', '%' . $request->city . '%')
+            ->where('type', 'like', '%' . $request->type . '%')
+            ->where('surface', 'like', '%' . $request->surface . '%')
+            ->where('pieces','<=', $request->pieces)
+            ->whereBetween('price', [$request->budget_min, $request->budget_max])
+            ->where(function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('description', 'like', '%' . $request->keyword . '%');
+            })
+            ->latest()->get();
+
+        return response()->json(['status' => 'success', 'data', $annonces, 200]);
+    }
+
     private function annonceFromRequest(Request $request, Annonce $annonce)
     {
         $annonce->title = $request->title;
@@ -147,6 +166,8 @@ class AnnonceController extends Controller
         $annonce->status = $request->status;
         $annonce->rent = $request->rent;
         $annonce->premium = $request->premium;
+        $annonce->surface = $request->surface;
+        $annonce->pieces = $request->pieces;
         return $annonce;
     }
 

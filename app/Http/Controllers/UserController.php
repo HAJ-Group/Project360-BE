@@ -41,19 +41,21 @@ class UserController extends Controller {
                 $token = base64_encode(Str::random(40));
                 if($using_email) {
                     User::where('email', $request->username)->update(['token' => $token]);
-                    if($account->active === 1) {
+                    return response()->json(User::where('email', $request->username)->first()->token);
+              /*      if($account->active === 1) {
                         return response()->json(User::where('email', $request->username)->first()->token);
                     } else {
                         return response()->json('Email is not confirmed!', 401);
-                    }
+                    }*/
                 }
                 else {
                     User::where('username', $request->username)->update(['token' => $token]);
-                    if($account->active === 1) {
+                    return response()->json(User::where('username', $request->username)->first()->token);
+                   /* if($account->active === 1) {
                         return response()->json(User::where('username', $request->username)->first()->token);
                     } else {
                         return response()->json('Email is not confirmed! Check your mail for confirmation', 401);
-                    }
+                    }*/
                 }
             }
             else {
@@ -84,8 +86,8 @@ class UserController extends Controller {
         $this->validate($request, [
             'username' => 'required|unique:users|min:5|max:100',
             'email' => 'required|unique:users|email|max:100',
-            'password' => 'required|min:8|max:32|regex:"^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,32}$"',
-            'confirm_password' => 'required|min:8|max:32'
+//            'password' => 'required|min:8|max:32|regex:"^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,32}$"',
+//            'confirm_password' => 'required|min:8|max:32'
         ]);
         // Password confirmation
         if($request->password === $request->confirm_password) {
