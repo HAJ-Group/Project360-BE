@@ -33,6 +33,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'annonce'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
+        $router->get('/user', 'AnnonceController@getUserAnnounces');
         $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
         $router->post('/', 'AnnonceController@store');
         $router->get('/{id}', 'AnnonceController@show');
@@ -54,4 +55,22 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
 
 $router->group(['prefix' => 'contact'], function () use ($router) {
     $router->post('/', ['uses' => 'ContactController@contact']);
+});
+
+
+
+//Auth::routes();
+
+$router->group(['prefix' => 'socialite'], function () use ($router) {
+    $router->get('/', ['uses' => 'ContactController@contact']);
+
+
+    $router->get('login/facebook', ['uses' => 'LoginFacebookController@redirectToProvider']);
+    $router->get('login/facebook/callback', ['uses' => 'LoginFacebookController@handleProviderCallback']);
+
+    $router->get('login/google', ['uses' => 'Auth\LoginGoogleController@redirectToProvider']);
+    $router->get('login/google/callback', ['uses' => 'Auth\LoginGoogleController@handleProviderCallback']);
+
+
+
 });
