@@ -143,7 +143,11 @@ class AnnonceController extends Controller
     public function getAnnoncesByFilters(Request $request)
     {
 
-        $annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
+        $annonces = Annonce::where('title', 'like', '%'.$request->keyword.'%')
+            ->orWhere('description', 'like', '%'.$request->keyword.'%')
+            ->latest()->get();
+
+        /*$annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
             ->where('city', 'like', '%' . $request->city . '%')
             ->where('type', 'like', '%' . $request->type . '%')
             ->where('surface', 'like', '%' . $request->surface . '%')
@@ -153,7 +157,7 @@ class AnnonceController extends Controller
                 $query->where('title', 'like', '%' . $request->keyword . '%')
                     ->orWhere('description', 'like', '%' . $request->keyword . '%');
             })
-            ->latest()->get();
+            ->latest()->get();*/
 
         return response()->json(['status' => 'success', 'data', $annonces, 200]);
     }
