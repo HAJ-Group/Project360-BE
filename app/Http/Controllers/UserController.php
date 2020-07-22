@@ -50,7 +50,8 @@ class UserController extends Controller {
                 else {
                     User::where('username', $request->username)->update(['token' => $token]);
                     if($account->active === 1) {
-                        return response()->json(User::where('username', $request->username)->first()->token);
+                        $user = User::where('username', $request->username)->first();
+                        return response()->json(['token' => $user->token, 'role' => $user->role]);
                     } else {
                         return response()->json('Email is not confirmed! Check your mail for confirmation', 401);
                     }
