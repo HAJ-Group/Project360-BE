@@ -6,6 +6,7 @@ use App\Annonce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use function Sodium\add;
 
 class AnnonceController extends Controller
 {
@@ -142,11 +143,32 @@ class AnnonceController extends Controller
 
     public function getAnnoncesByFilters(Request $request)
     {
-
-        $annonces = Annonce::where('title', 'like', '%'.$request->keyword.'%')
-            ->orWhere('description', 'like', '%'.$request->keyword.'%')
-            ->latest()->get();
-
+        $annonces = Annonce::where(function ($query) use ($request) {
+                if($request->has('keyword') and count($query->whereNotNull('title')->get())) {
+                    $query->where('title', 'like', '%' . $request->keyword . '%');
+                    $query->orWhere('description', 'like', '%' . $request->keyword . '%');
+                }
+                if($request->has('status') and count($query->whereNotNull('status')->get())) {
+                    $query->where('status', 'like', '%' . $request->status . '%');
+                }
+                if($request->has('type') and count($query->whereNotNull('type')->get())) {
+                    $query->where('type', 'like', '%' . $request->type . '%');
+                }
+                if($request->has('city') and count($query->whereNotNull('city')->get())) {
+                    $query->where('city', 'like', '%' . $request->city . '%');
+                }
+                if($request->has('budget_min') and $request->has('budget_max') and count($query->whereNotNull('price')->get())) {
+                    $query->whereBetween('price', [$request->budget_min, $request->budget_max]);
+                }
+                if($request->has('pieces') and count($query->whereNotNull('pieces')->get())) {
+                    $query->where('pieces', '<=', $request->pieces);
+                }
+                if($request->has('surface') and count($query->whereNotNull('surface')->get())) {
+                    $query->where('surface', '<=', $request->surface);
+                }
+            })->latest()->get();
+        $all = Annonce::all();
+        if(!count($annonces)) $annonces = $all;
         /*$annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
             ->where('city', 'like', '%' . $request->city . '%')
             ->where('type', 'like', '%' . $request->type . '%')
@@ -159,7 +181,7 @@ class AnnonceController extends Controller
             })
             ->latest()->get();*/
 
-        return response()->json(['status' => 'success', 'data', $annonces, 200]);
+        return response()->json(['status' => 'success', 'data' => $annonces, 200]);
     }
 
     private function annonceFromRequest(Request $request, Annonce $annonce)
