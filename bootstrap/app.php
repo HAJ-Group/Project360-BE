@@ -97,7 +97,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
-$app->register( \Laravel\Socialite\SocialiteServiceProvider::class);
+/*$app->register( \Laravel\Socialite\SocialiteServiceProvider::class);*/
 
 /*
 |--------------------------------------------------------------------------
