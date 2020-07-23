@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use function count;
 
@@ -18,7 +19,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages', 'show']]);
     }
 
     /**
@@ -154,12 +155,31 @@ class AnnouncerAnnounceController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param $username
      * @param $id
      * @return void
      */
-    public function show($id)
+    public function show($username = null, $id)
     {
+        // Finding the user by username
+       /* $user = User::where('username', $username)->first();*/
+        $user = Auth::user();
 
+        if($user) {
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if ($announcer) {
+                $announce = $announcer->annonces()->find($id);
+                if ($announce){
+                    $announce->images;
+                    return Response()->json($announce);
+                }
+                return Response()->json(['error' => "the specific announce with id = ${id} does not exist ", 'code' => 404], 404);
+            }
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
+        }
+        return Response()->json(['error' => "You should authenticate !"], 404);
     }
 
     /**
