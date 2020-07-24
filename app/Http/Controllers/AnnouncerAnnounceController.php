@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use function count;
 
@@ -19,7 +20,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages', 'show']]);
+        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages', 'show', 'destroy']]);
     }
 
     /**
@@ -213,12 +214,34 @@ class AnnouncerAnnounceController extends Controller
             $announcer = Annoncer::where('user_id', $user->id)->first();
 
             if ($announcer) {
+                $announce = $announcer->annonces()->find($id);
 
+                if ($announce){
+
+                    // Delete the images associated with the announce from the database
+                    $announce->images()->delete();
+
+                    // Delete images from public folder
+                    $this->deleteImagesForAnnounce($username, $id);
+
+                    // Delete the announce
+                    $announce->delete();
+
+                    return Response()->json(['message' => "the announce owned by {$username} and with id = {$id} has deleted successfully !", 'code' => 204], 204);
+
+                }
+                return Response()->json(['error' => "the announcer {$announcer->id} does not have this announce with id = {$id}"], 404);
             }
             return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
-}
+    }
+
+    public function deleteImagesForAnnounce($username, $id){
+        // Delete the whole folder of the announce that contains images
+        $announcePath = "announces-images/" . $username . "/" . $id;
+        File::deleteDirectory($announcePath);
+    }
 
 
 
