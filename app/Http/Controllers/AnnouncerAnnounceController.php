@@ -195,17 +195,30 @@ class AnnouncerAnnounceController extends Controller
     }
 
 
-
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Annonce $annonce
-     * @return \Illuminate\Http\JsonResponse
+     * @param $username
+     * @param $id
+     * @return void
      */
-    public function destroy($id)
+    public function destroy($username, $id)
     {
+        // Finding the user by username
+        $user = User::where('username', $username)->first();
 
-    }
+        if($user) {
+
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if ($announcer) {
+
+            }
+            return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
+        }
+        return Response()->json(['error' => "the specific user does not exist "], 404);
+}
 
 
 
