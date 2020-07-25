@@ -180,18 +180,57 @@ class AnnouncerAnnounceController extends Controller
             }
             return Response()->json(['error' => "the specific announcer does not exist "], 404);
         }
-        return Response()->json(['error' => "You should authenticate !"], 404);
+        return Response()->json(['error' => "You should authenticate !"], 401);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
+     * @param $username
      * @param $id
      * @return void
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $username, $id)
     {
+
+        // Finding the user by username
+        $user = User::where('username', $username)->first();
+
+        if($user){
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if($announcer){
+                $announce = $announcer->annonces()->find($id);
+                if($announce){
+
+
+                    // Delete old images associated with the announce from the database
+                    $announce->images()->delete();
+
+                    // Delete old images from public folder
+                    $this->deleteImagesForAnnounce($username, $id);
+
+                    // Validate the data send in the request object
+                    $this->validateRequest($request);
+
+                    // Fill the announce with the new data
+                    $announce->fill($request->all());
+
+                    // Save changes
+                    $announce->save();
+
+                    // Store the new images for the announce
+                    $this->storeImages($request, $username, $announce->id);
+
+                    return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was updated successfully for the announcer : {$announcer->first_name} "], 201);
+                }
+                return Response()->json(['error' => "Does not exist any announce with id = {$announce->id} for the announcer {$announcer}"], 404);
+            }
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
+        }
+        return Response()->json(['error' => "the specific user does not exist "], 404);
 
     }
 
