@@ -20,7 +20,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages', 'show', 'destroy']]);
+        $this->middleware('auth', ['except' => ['store']]);
     }
 
     /**
@@ -226,7 +226,7 @@ class AnnouncerAnnounceController extends Controller
 
                     return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was updated successfully for the announcer : {$announcer->first_name} "], 201);
                 }
-                return Response()->json(['error' => "Does not exist any announce with id = {$announce->id} for the announcer {$announcer}"], 404);
+                return Response()->json(['error' => "Does not exist any announce with id = {$id} for the announcer {$announcer->first_name}"], 404);
             }
             return Response()->json(['error' => "the specific announcer does not exist "], 404);
         }
