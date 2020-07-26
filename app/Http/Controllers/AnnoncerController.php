@@ -93,23 +93,22 @@ class AnnoncerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $annoncer = Annoncer::findOrFail($id);
-        if (empty($annoncer)) {
-            return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
-        }
+        $announcer = Annoncer::findOrFail($id);
+        if(Auth::id() == $announcer->user_id){
+            if (empty($announcer)) {
+                return response()->json(['status' => 'error', 'message' => 'the announcer is not found'], 404);
+            }
+            $validation = $this->validateRequest($request);
+            if ($validation->fails()) {
+                return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
+            }
 
-        $validation = $this->validateRequest($request);
-
-        if ($validation->fails()) {
-            return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
-        }
-
-        $c = $this->annoncerFromRequest($request, $annoncer);
-
-        if ($c->update()) {
-            return response()->json(['status' => 'success', 'data' => $c], 201);
-        } else {
-            return response()->json(['status' => 'error'], 500);
+            $c = $this->annoncerFromRequest($request, $announcer);
+            if ($c->update()) {
+                return response()->json(['status' => 'success', 'data' => $c], 201);
+            } else {
+                return response()->json(['status' => 'error'], 500);
+            }
         }
     }
 
@@ -143,7 +142,6 @@ class AnnoncerController extends Controller
             'first_name' => 'required|max:100',
             'phone' => 'max:50',
             'city' => 'required|max:50',
-            'email' => 'required|max:50|unique:annoncers',
         ]);
     }
 
