@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
         $router->post('/', 'AnnoncerController@store');
         $router->get('/{id}', 'AnnoncerController@show');
+        $router->get('/user', 'AnnoncerController@getUserAnnouncer');
         $router->put('/{id}', 'AnnoncerController@update');
         $router->delete('/{id}', 'AnnoncerController@destroy');
     });

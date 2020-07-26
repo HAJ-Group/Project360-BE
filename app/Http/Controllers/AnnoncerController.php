@@ -26,8 +26,7 @@ class AnnoncerController extends Controller
      */
     public function index()
     {
-
-     $user = new User();
+     /*$user = new User();
         $user->username = 'rhita';
         $user->password = 'rhita12345';
         $user->email = 'rhitaess@gmail.com';
@@ -35,7 +34,7 @@ class AnnoncerController extends Controller
         $user->role = '2';
         $user->active = 1;
         $user->save();
-        return $user;
+        return $user;*/
         return response()->json(['status' => 'success', 'data', Annoncer::all(), 200]);
     }
 
@@ -80,6 +79,10 @@ class AnnoncerController extends Controller
         return response()->json(['status' => 'success', 'data' => $annoncer], 200);
     }
 
+    public function getUserAnnouncer() {
+        $user = Auth::user();
+        return response()->json($user->annoncer);
+    }
 
     /**
      * Update the specified resource in storage.
