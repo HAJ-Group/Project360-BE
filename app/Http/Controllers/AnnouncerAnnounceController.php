@@ -206,14 +206,14 @@ class AnnouncerAnnounceController extends Controller
                 if($announce){
 
 
+                    // Validate the data send in the request object
+                    $this->validateRequest($request);
+
                     // Delete old images associated with the announce from the database
                     $announce->images()->delete();
 
                     // Delete old images from public folder
                     $this->deleteImagesForAnnounce($username, $id);
-
-                    // Validate the data send in the request object
-                    $this->validateRequest($request);
 
                     // Fill the announce with the new data
                     $announce->fill($request->all());
