@@ -98,6 +98,9 @@ class AnnouncerAnnounceController extends Controller
                         'position_map' => $request->get('positionMap'),
                         'status' => $request->get('status'),
                         'rent' => $request->get('rent'),
+                        'surface' => $request->get('surface'),
+                        'pieces' => $request->get('pieces'),
+                        'rooms' => $request->get('rooms'),
                         'premium' => $announcer->premium,
                         'annoncer_id' => $announcer->id,
                     ]
@@ -107,7 +110,7 @@ class AnnouncerAnnounceController extends Controller
 
                 return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was created successfully and attached with the announcer {$announcer->id} "], 201);
             }
-            return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
 
