@@ -57,6 +57,7 @@ class AnnoncerController extends Controller
         //link between User & Annoncer
         $user->annoncer()->save($annoncer);
         if ($annoncer->save()) {
+            Annoncer::find($annoncer->id)->update(['email' => $user->email]);
             return response()->json(['status' => 'success', 'data' => $annoncer], 201);
         } else {
             return response()->json(['status' => 'error'], 500);
@@ -152,7 +153,7 @@ class AnnoncerController extends Controller
         $annoncer->phone = $request->phone;
         $annoncer->address = $request->address;
         $annoncer->city = $request->city;
-        $annoncer->email = $request->email;
+        // $annoncer->email = $request->email;
         $annoncer->picture = $request->picture;
         $annoncer->date_of_birth = $request->date_of_birth;
         return $annoncer;

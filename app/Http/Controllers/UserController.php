@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Mail\ConfirmationEmail;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -63,6 +64,10 @@ class UserController extends Controller {
         } else {
             return response()->json('Account not found', 401);
         }
+    }
+
+    function getUser() {
+        return Auth::user();
     }
 
 
