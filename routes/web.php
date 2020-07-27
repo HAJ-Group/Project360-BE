@@ -17,6 +17,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
+    $router->get('/user', ['uses' => 'UserController@getUser']);
     $router->post('login', ['uses' => 'UserController@authenticate']);
     $router->post('subscribe', ['uses' => 'UserController@subscribe']);
     $router->post('smc/{username}', ['uses' => 'UserController@sendEmailConfirmation']);
@@ -24,10 +25,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
         $router->get('/', 'AnnoncerController@index');
+        $router->get('/user', 'AnnoncerController@getUserAnnouncer');
         $router->get('/getAnnonces', 'AnnoncerController@getAnnonces');
         $router->post('/', 'AnnoncerController@store');
         $router->get('/{id}', 'AnnoncerController@show');
-        $router->get('/user', 'AnnoncerController@getUserAnnouncer');
         $router->put('/{id}', 'AnnoncerController@update');
         $router->delete('/{id}', 'AnnoncerController@destroy');
     });
