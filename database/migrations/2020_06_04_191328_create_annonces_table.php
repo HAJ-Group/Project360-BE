@@ -29,6 +29,7 @@ class CreateAnnoncesTable extends Migration
             $table->string('rent', 100)->nullable();
             $table->double('surface')->nullable();
             $table->integer('pieces')->nullable();
+            $table->integer('rooms')->default('1');
             $table->boolean('premium')->default('0');
 
 
