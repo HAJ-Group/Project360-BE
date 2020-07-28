@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e277864236c58bb17773aab213c22e03",
+    "content-hash": "0ee7bb37d0507d52b99d5127e8737a5a",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -340,23 +340,25 @@
         },
         {
             "name": "flipbox/lumen-generator",
-            "version": "6.0.11",
+            "version": "7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flipboxstudio/lumen-generator.git",
-                "reference": "25353bf8dbf76f31026bf85ad220bea8602272c4"
+                "reference": "5bf3ddff2ff905476e0adfd8191e03f486ea74ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flipboxstudio/lumen-generator/zipball/25353bf8dbf76f31026bf85ad220bea8602272c4",
-                "reference": "25353bf8dbf76f31026bf85ad220bea8602272c4",
+                "url": "https://api.github.com/repos/flipboxstudio/lumen-generator/zipball/5bf3ddff2ff905476e0adfd8191e03f486ea74ae",
+                "reference": "5bf3ddff2ff905476e0adfd8191e03f486ea74ae",
                 "shasum": ""
             },
             "require": {
                 "classpreloader/classpreloader": "^3.0|^4.0",
-                "illuminate/support": "^5.4|^6.0|^7.0",
-                "psy/psysh": "0.8.*|0.9.*|0.10.*",
-                "symfony/var-dumper": "^3.1|^4.1|^4.2|^4.3|^5.0"
+                "illuminate/console": "^5.5|^6.0|^7.0",
+                "illuminate/filesystem": "^5.5|^6.0|^7.0",
+                "illuminate/support": "^5.5|^6.0|^7.0",
+                "psy/psysh": "0.9.*|0.10.*",
+                "symfony/var-dumper": "^4.2|^4.3|^5.0"
             },
             "type": "library",
             "autoload": {
@@ -375,7 +377,7 @@
                 }
             ],
             "description": "A Lumen Generator You Are Missing",
-            "time": "2020-05-26T11:52:53+00:00"
+            "time": "2020-06-10T01:39:50+00:00"
         },
         {
             "name": "illuminate/auth",
@@ -1103,16 +1105,16 @@
         },
         {
             "name": "illuminate/mail",
-            "version": "v6.18.18",
+            "version": "v6.18.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/mail.git",
-                "reference": "bd5e89ed0008d4ee2f092943f5c118714c392dfc"
+                "reference": "c3b14b7a15ca42c1eac77c4cbe4e8d5beb3ffc1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/mail/zipball/bd5e89ed0008d4ee2f092943f5c118714c392dfc",
-                "reference": "bd5e89ed0008d4ee2f092943f5c118714c392dfc",
+                "url": "https://api.github.com/repos/illuminate/mail/zipball/c3b14b7a15ca42c1eac77c4cbe4e8d5beb3ffc1c",
+                "reference": "c3b14b7a15ca42c1eac77c4cbe4e8d5beb3ffc1c",
                 "shasum": ""
             },
             "require": {
@@ -1154,7 +1156,7 @@
             ],
             "description": "The Illuminate Mail package.",
             "homepage": "https://laravel.com",
-            "time": "2020-05-13T14:07:23+00:00"
+            "time": "2020-04-15T18:42:58+00:00"
         },
         {
             "name": "illuminate/pagination",
@@ -1722,32 +1724,6 @@
                 "markdown",
                 "md",
                 "parser"
-            ],
-            "funding": [
-                {
-                    "url": "https://enjoy.gitstore.app/repositories/thephpleague/commonmark",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.colinodell.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.paypal.me/colinpodell/10.00",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/colinodell",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/colinodell",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/league/commonmark",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-04T22:15:21+00:00"
         },
@@ -2521,20 +2497,6 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-05-20T17:43:50+00:00"
         },
         {
@@ -3147,20 +3109,6 @@
                 "polyfill",
                 "portable",
                 "shim"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-12T16:47:27+00:00"
         },
@@ -5452,6 +5400,5 @@
     "platform": {
         "php": "^7.2"
     },
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }

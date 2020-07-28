@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Annoncer extends Model
 {
     protected $fillable = [
-        'user_id', 'last_name','first_name','phone','address','city','email','picture','date_of_birth'
+        'user_id', 'last_name','first_name','phone',
+        'address','city','email','picture','date_of_birth', 'premium'
     ];
     public function user() {
         return $this->belongsTo(User::class);

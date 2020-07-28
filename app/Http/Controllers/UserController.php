@@ -6,8 +6,10 @@ namespace App\Http\Controllers;
 use App\Mail\ConfirmationEmail;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use const http\Client\Curl\AUTH_ANY;
 
 class UserController extends Controller {
 
@@ -50,7 +52,8 @@ class UserController extends Controller {
                 else {
                     User::where('username', $request->username)->update(['token' => $token]);
                     if($account->active === 1) {
-                        return response()->json(User::where('username', $request->username)->first()->token);
+                        $user = User::where('username', $request->username)->first();
+                        return response()->json(['token' => $user->token, 'role' => $user->role]);
                     } else {
                         return response()->json('Email is not confirmed! Check your mail for confirmation', 401);
                     }
@@ -62,6 +65,10 @@ class UserController extends Controller {
         } else {
             return response()->json('Account not found', 401);
         }
+    }
+
+    function getUser() {
+        return Auth::user();
     }
 
 
@@ -95,7 +102,7 @@ class UserController extends Controller {
             User::where('username', $account->username)->update(['token' => $token, 'password' => password_hash($account->password, 1)]);
             // Sending mail confirmation
             $this->sendEmailConfirmation($account->username);
-            return response()->json([$account]);
+            return response()->json([$account, $account->id]);
         } else {
             return response()->json('Passwords not match', 401);
         }
@@ -132,6 +139,12 @@ class UserController extends Controller {
             return response()->json('Email is confirmed successfully!');
         }
         return response()->json('Code is not correct', 401);
+    }
+
+    function cancelCode($id) {
+        $user = User::find($id);
+        $user->update(['code' => 0]);
+        return response()->json($user);
     }
 
 }
