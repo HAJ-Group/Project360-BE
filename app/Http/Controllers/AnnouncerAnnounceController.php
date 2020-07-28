@@ -311,7 +311,7 @@ class AnnouncerAnnounceController extends Controller
             'city' => 'required|max:50',
             'status' => 'required',
             'rent' => 'required|max:100',
-            'surface' => 'required|numeric|max:4',
+            'surface' => 'required|numeric|min:0',
             'pieces' => 'required|numeric|min:0',
             'rooms' => 'required|numeric|min:0'
         ];
