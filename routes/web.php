@@ -22,6 +22,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('subscribe', ['uses' => 'UserController@subscribe']);
     $router->post('smc/{username}', ['uses' => 'UserController@sendEmailConfirmation']);
     $router->get('confirm/{username}/{code}', ['uses' => 'UserController@confirmEmail']);
+    $router->put('/cc/{id}', ['uses' => 'UserController@cancelCode']);
 
     $router->group(['prefix' => 'annoncer'], function () use ($router) {
         $router->get('/', 'AnnoncerController@index');
