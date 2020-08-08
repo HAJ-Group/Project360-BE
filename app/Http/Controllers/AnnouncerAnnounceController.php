@@ -182,9 +182,11 @@ class AnnouncerAnnounceController extends Controller
      * @param \App\Annonce $annonce
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($username, $id)
     {
-
+        $annonce = Annonce::find($id);
+        $annonce->delete();
+        return response()->json('deleted');
     }
 
 
