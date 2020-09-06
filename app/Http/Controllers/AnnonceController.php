@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getPositions']]);
     }
 
     /**
@@ -43,6 +43,11 @@ class AnnonceController extends Controller
         return response()->json(['status' => 'success', 'data', $tab, 200]);
     }
 
+
+    public function getPositions(){
+        $cords = Annonce::select('position_map')->get();
+        return response()->json(['status' => 'success', 'data', $cords, 200]);
+    }
 
     /**
      * Store a newly created resource in storage.
