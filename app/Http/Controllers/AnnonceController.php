@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getPositions']]);
     }
 
     /**
@@ -47,6 +47,11 @@ class AnnonceController extends Controller
         $user = Auth::user();
         $announcer = $user->annoncer;
         return response()->json($announcer->annonces);
+    }
+
+    public function getPositions(){
+        $cords = Annonce::select('position_map')->get();
+        return response()->json(['status' => 'success', 'data', $cords, 200]);
     }
 
     /**
