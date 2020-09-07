@@ -17,6 +17,8 @@ class Annonce extends Model
         'position_map',
         'status',
         'rent',
+        'surface',
+        'pieces',
         'premium',
         'annoncer_id',
     ];

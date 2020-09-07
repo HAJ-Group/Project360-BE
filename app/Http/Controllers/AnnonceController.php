@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getPositions']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser']]);
     }
 
     /**
@@ -24,6 +24,9 @@ class AnnonceController extends Controller
     public function index()
     {
         $annonces = Annonce::all();
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
         return response()->json(['status' => 'success', 'data', $annonces, 200]);
     }
 
@@ -40,18 +43,26 @@ class AnnonceController extends Controller
             $j += 2;
         }
 //        return $tab;
+        foreach ($tab as $announce){
+            $announce->images;
+        }
         return response()->json(['status' => 'success', 'data', $tab, 200]);
     }
 
     public function getUserAnnounces() {
         $user = Auth::user();
         $announcer = $user->annoncer;
-        return response()->json($announcer->annonces);
+        $annonces = $announcer->annonces;
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
+        return response()->json($annonces);
     }
 
-    public function getPositions(){
-        $cords = Annonce::select('position_map')->get();
-        return response()->json(['status' => 'success', 'data', $cords, 200]);
+    public function getAnnoncesUser($id) {
+        $annonce = Annonce::find($id);
+        $annoncer = $annonce->annoncer;
+        return response()->json($annoncer->user);
     }
 
     /**
@@ -149,9 +160,8 @@ class AnnonceController extends Controller
     public function getAnnoncesByFilters(Request $request)
     {
         $annonces = Annonce::where(function ($query) use ($request) {
-                if($request->has('keyword') and count($query->whereNotNull('title')->get())) {
+                if($request->has('keyword')) {
                     $query->where('title', 'like', '%' . $request->keyword . '%');
-                    $query->orWhere('description', 'like', '%' . $request->keyword . '%');
                 }
                 if($request->has('status') and count($query->whereNotNull('status')->get())) {
                     $query->where('status', 'like', '%' . $request->status . '%');
@@ -162,18 +172,19 @@ class AnnonceController extends Controller
                 if($request->has('city') and count($query->whereNotNull('city')->get())) {
                     $query->where('city', 'like', '%' . $request->city . '%');
                 }
+                if($request->has('surface') and count($query->whereNotNull('surface')->get())) {
+                    $query->where('surface', 'like', '%'.$request->surface.'%');
+                }
                 if($request->has('budget_min') and $request->has('budget_max') and count($query->whereNotNull('price')->get())) {
                     $query->whereBetween('price', [$request->budget_min, $request->budget_max]);
                 }
                 if($request->has('pieces') and count($query->whereNotNull('pieces')->get())) {
                     $query->where('pieces', '<=', $request->pieces);
                 }
-                if($request->has('surface') and count($query->whereNotNull('surface')->get())) {
-                    $query->where('surface', '<=', $request->surface);
-                }
             })->latest()->get();
-        $all = Annonce::all();
-        if(!count($annonces)) $annonces = $all;
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
         /*$annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
             ->where('city', 'like', '%' . $request->city . '%')
             ->where('type', 'like', '%' . $request->type . '%')
@@ -185,7 +196,6 @@ class AnnonceController extends Controller
                     ->orWhere('description', 'like', '%' . $request->keyword . '%');
             })
             ->latest()->get();*/
-
         return response()->json(['status' => 'success', 'data' => $annonces, 200]);
     }
 

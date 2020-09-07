@@ -26,8 +26,7 @@ class AnnoncerController extends Controller
      */
     public function index()
     {
-
-     $user = new User();
+     /*$user = new User();
         $user->username = 'rhita';
         $user->password = 'rhita12345';
         $user->email = 'rhitaess@gmail.com';
@@ -35,7 +34,7 @@ class AnnoncerController extends Controller
         $user->role = '2';
         $user->active = 1;
         $user->save();
-        return $user;
+        return $user;*/
         return response()->json(['status' => 'success', 'data', Annoncer::all(), 200]);
     }
 
@@ -58,6 +57,7 @@ class AnnoncerController extends Controller
         //link between User & Annoncer
         $user->annoncer()->save($annoncer);
         if ($annoncer->save()) {
+            Annoncer::find($annoncer->id)->update(['email' => $user->email]);
             return response()->json(['status' => 'success', 'data' => $annoncer], 201);
         } else {
             return response()->json(['status' => 'error'], 500);
@@ -80,6 +80,10 @@ class AnnoncerController extends Controller
         return response()->json(['status' => 'success', 'data' => $annoncer], 200);
     }
 
+    public function getUserAnnouncer() {
+        $user = Auth::user();
+        return response()->json($user->annoncer);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -140,7 +144,6 @@ class AnnoncerController extends Controller
             'first_name' => 'required|max:100',
             'phone' => 'max:50',
             'city' => 'required|max:50',
-            'email' => 'required|max:50|unique:annoncers',
         ]);
     }
 
@@ -151,7 +154,7 @@ class AnnoncerController extends Controller
         $annoncer->phone = $request->phone;
         $annoncer->address = $request->address;
         $annoncer->city = $request->city;
-        $annoncer->email = $request->email;
+        // $annoncer->email = $request->email;
         $annoncer->picture = $request->picture;
         $annoncer->date_of_birth = $request->date_of_birth;
         return $annoncer;
