@@ -37,7 +37,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['prefix' => 'annonces'], function () use ($router) {
         $router->get('/', 'AnnonceController@index');
         $router->get('/user', 'AnnonceController@getUserAnnounces');
+        $router->get('/{id}/user', 'AnnonceController@getAnnoncesUser');
         $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
+        $router->get('/coordinates', 'AnnonceController@getPositions');
         $router->post('/', 'AnnonceController@store');
         $router->post('/byFilters/', 'AnnonceController@getAnnoncesByFilters');
         $router->get('/{id}', 'AnnonceController@show');

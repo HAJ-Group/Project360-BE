@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser']]);
     }
 
     /**
@@ -24,6 +24,9 @@ class AnnonceController extends Controller
     public function index()
     {
         $annonces = Annonce::all();
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
         return response()->json(['status' => 'success', 'data', $annonces, 200]);
     }
 
@@ -40,13 +43,26 @@ class AnnonceController extends Controller
             $j += 2;
         }
 //        return $tab;
+        foreach ($tab as $announce){
+            $announce->images;
+        }
         return response()->json(['status' => 'success', 'data', $tab, 200]);
     }
 
     public function getUserAnnounces() {
         $user = Auth::user();
         $announcer = $user->annoncer;
-        return response()->json($announcer->annonces);
+        $annonces = $announcer->annonces;
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
+        return response()->json($annonces);
+    }
+
+    public function getAnnoncesUser($id) {
+        $annonce = Annonce::find($id);
+        $annoncer = $annonce->annoncer;
+        return response()->json($annoncer->user);
     }
 
     /**
@@ -166,6 +182,9 @@ class AnnonceController extends Controller
                     $query->where('pieces', '<=', $request->pieces);
                 }
             })->latest()->get();
+        foreach ($annonces as $announce){
+            $announce->images;
+        }
         /*$annonces = Annonce::where('status', 'like', '%' . $request->status . '%')
             ->where('city', 'like', '%' . $request->city . '%')
             ->where('type', 'like', '%' . $request->type . '%')
