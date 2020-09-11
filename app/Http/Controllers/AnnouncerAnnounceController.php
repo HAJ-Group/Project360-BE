@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use function count;
 
@@ -18,7 +20,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store', 'storeImages', 'index', 'downloadImages']]);
+        $this->middleware('auth', ['except' => ['store']]);
     }
 
     /**
@@ -40,7 +42,7 @@ class AnnouncerAnnounceController extends Controller
                 if(count($announces) > 0){
 
                     foreach ($announces as $announce){
-                       $announce->images;
+                        $announce->images;
                     }
                     return Response()->json($announces, 200);
                 }
@@ -98,15 +100,17 @@ class AnnouncerAnnounceController extends Controller
                         'rent' => $request->get('rent'),
                         'surface' => $request->get('surface'),
                         'pieces' => $request->get('pieces'),
+                        'rooms' => $request->get('rooms'),
                         'premium' => $announcer->premium,
                         'annoncer_id' => $announcer->id,
                     ]
                 );
 
                 $this->storeImages($request, $username, $announce->id);
+
                 return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was created successfully and attached with the announcer {$announcer->id} "], 201);
             }
-            return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
 
@@ -155,39 +159,130 @@ class AnnouncerAnnounceController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param $username
      * @param $id
      * @return void
      */
-    public function show($id)
+    public function show($username = null, $id)
     {
+        // Finding the user by username
+        /* $user = User::where('username', $username)->first();*/
+        $user = Auth::user();
 
+        if($user) {
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if ($announcer) {
+                $announce = $announcer->annonces()->find($id);
+                if ($announce){
+                    $announce->images;
+                    return Response()->json($announce);
+                }
+                return Response()->json(['error' => "the specific announce with id = ${id} does not exist ", 'code' => 404], 404);
+            }
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
+        }
+        return Response()->json(['error' => "You should authenticate !"], 401);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
+     * @param $username
      * @param $id
      * @return void
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $username, $id)
     {
 
-    }
+        // Finding the user by username
+        $user = User::where('username', $username)->first();
 
+        if($user){
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if($announcer){
+                $announce = $announcer->annonces()->find($id);
+                if($announce){
+
+
+                    // Validate the data send in the request object
+                    $this->validateRequest($request);
+
+                    // Delete old images associated with the announce from the database
+                    $announce->images()->delete();
+
+                    // Delete old images from public folder
+                    $this->deleteImagesForAnnounce($username, $id);
+
+                    // Fill the announce with the new data
+                    $announce->fill($request->all());
+
+                    // Save changes
+                    $announce->save();
+
+                    // Store the new images for the announce
+                    $this->storeImages($request, $username, $announce->id);
+
+                    return Response()->json(['data' => $announce, 'message' => "the announce {$announce->id} was updated successfully for the announcer : {$announcer->first_name} "], 201);
+                }
+                return Response()->json(['error' => "Does not exist any announce with id = {$id} for the announcer {$announcer->first_name}"], 404);
+            }
+            return Response()->json(['error' => "the specific announcer does not exist "], 404);
+        }
+        return Response()->json(['error' => "the specific user does not exist "], 404);
+
+    }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Annonce $annonce
-     * @return \Illuminate\Http\JsonResponse
+     * @param $username
+     * @param $id
+     * @return void
      */
     public function destroy($username, $id)
     {
-        $annonce = Annonce::find($id);
-        $annonce->delete();
-        return response()->json('deleted');
+        // Finding the user by username
+        $user = User::where('username', $username)->first();
+
+        if($user) {
+
+            // Finding the specific announcer
+            $announcer = Annoncer::where('user_id', $user->id)->first();
+
+            if ($announcer) {
+                $announce = $announcer->annonces()->find($id);
+
+                if ($announce){
+
+                    // Delete the images associated with the announce from the database
+                    $announce->images()->delete();
+
+                    // Delete images from public folder
+                    $this->deleteImagesForAnnounce($username, $id);
+
+                    // Delete the announce
+                    $announce->delete();
+
+                    return Response()->json(['message' => "the announce owned by {$username} and with id = {$id} has deleted successfully !", 'code' => 204], 204);
+
+                }
+                return Response()->json(['error' => "the announcer {$announcer->id} does not have this announce with id = {$id}"], 404);
+            }
+            return Response()->json(['error' => "the specific announcer {$announcer->id} does not exist "], 404);
+        }
+        return Response()->json(['error' => "the specific user does not exist "], 404);
+    }
+
+    public function deleteImagesForAnnounce($username, $id){
+        // Delete the whole folder of the announce that contains images
+        $announcePath = "announces-images/" . $username . "/" . $id;
+        File::deleteDirectory($announcePath);
     }
 
 
@@ -216,6 +311,9 @@ class AnnouncerAnnounceController extends Controller
             'city' => 'required|max:50',
             'status' => 'required',
             'rent' => 'required|max:100',
+            'surface' => 'required|numeric|min:0',
+            'pieces' => 'required|numeric|min:0',
+            'rooms' => 'required|numeric|min:0'
         ];
 
         $this->validate($request, $rules);
