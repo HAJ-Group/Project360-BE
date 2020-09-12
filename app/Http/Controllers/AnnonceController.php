@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser', 'show']]);
     }
 
     /**
@@ -105,7 +105,7 @@ class AnnonceController extends Controller
         if (empty($annonce)) {
             return response()->json(['status' => 'error', 'message' => 'the annonce is not found'], 404);
         }
-
+        $annonce->images;
         return response()->json(['status' => 'success', 'data' => $annonce], 200);
     }
 
