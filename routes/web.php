@@ -15,7 +15,7 @@ $router->get('/',['middleware','cors'], function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api'],['middleware','cors'], function () use ($router) {
+$router->group(['prefix' => 'api','middleware'=>'cors'], function () use ($router) {
 
     $router->get('/user', ['uses' => 'UserController@getUser']);
     $router->post('login', ['uses' => 'UserController@authenticate']);
@@ -58,7 +58,7 @@ $router->group(['prefix' => 'api'],['middleware','cors'], function () use ($rout
 
 });
 
-$router->group(['prefix' => 'admin'],['middleware','cors'], function () use ($router) {
+$router->group(['prefix' => 'admin','middleware'=>'cors'], function () use ($router) {
 
     $router->post('screate', ['uses' => 'AdminController@superCreate']);
     $router->post('create', ['uses' => 'AdminController@create']);
@@ -69,7 +69,7 @@ $router->group(['prefix' => 'admin'],['middleware','cors'], function () use ($ro
 });
 
 
-$router->group(['prefix' => 'contact'],['middleware','cors'], function () use ($router) {
+$router->group(['prefix' => 'contact','middleware'=>'cors'], function () use ($router) {
     $router->post('/', ['uses' => 'ContactController@contact']);
 });
 
@@ -77,7 +77,7 @@ $router->group(['prefix' => 'contact'],['middleware','cors'], function () use ($
 
 //Auth::routes();
 
-$router->group(['prefix' => 'socialite'],['middleware','cors'], function () use ($router) {
+$router->group(['prefix' => 'socialite','middleware'=>'cors'], function () use ($router) {
 
     $router->get('login/facebook', ['uses' => 'LoginFacebookController@redirectToProvider']);
     $router->get('login/facebook/callback', ['uses' => 'LoginFacebookController@handleProviderCallback']);
