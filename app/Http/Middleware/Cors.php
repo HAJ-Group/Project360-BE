@@ -18,9 +18,9 @@ class Cors
         // Pre-Middleware Action
 
         $response = $next($request)
-            ->header('Access-Control-Allow-Origin',"*")
-            ->header('Access-Control-Allow-Methods',"PUT,POST,DELETE,GET,OPTIONS")
-            ->header('Access-Control-Allow-Header',"Access-Control-Allow-Origin, Content-Type, Accept, Accept-Language, Origin, User-Agent");
+            ->header('Access-Control-Allow-Origin','*')
+            ->header('Access-Control-Allow-Methods','PUT,POST,DELETE,GET,OPTIONS')
+            ->header('Access-Control-Allow-Header','Access-Control-Allow-Origin, Content-Type, Accept, Accept-Language, Origin, User-Agent');
 
         // Post-Middleware Action
 
