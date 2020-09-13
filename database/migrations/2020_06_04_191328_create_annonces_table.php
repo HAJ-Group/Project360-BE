@@ -17,7 +17,7 @@ class CreateAnnoncesTable extends Migration
         Schema::create('annonces', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title', 100)->nullable();
             $table->string('type', 100)->nullable();
             $table->string('description', 100)->nullable();
