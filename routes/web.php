@@ -15,7 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api','middleware'=>'cors'], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->get('/user', ['uses' => 'UserController@getUser']);
     $router->post('login', ['uses' => 'UserController@authenticate']);
@@ -35,7 +35,7 @@ $router->group(['prefix' => 'api','middleware'=>'cors'], function () use ($route
     });
 
     $router->group(['prefix' => 'annonces'], function () use ($router) {
-        $router->get('/', 'AnnonceController@index');
+        $router->get('/', ['middleware'=>'cors'],'AnnonceController@index');
         $router->get('/user', 'AnnonceController@getUserAnnounces');
         $router->get('/{id}/user', 'AnnonceController@getAnnoncesUser');
         $router->get('/premium', 'AnnonceController@getPremiumAnnonces');
