@@ -95,7 +95,7 @@ class AnnouncerAnnounceController extends Controller
                         'price' => $request->get('price'),
                         'address' => $request->get('address'),
                         'city' => $request->get('city'),
-                        'position_map' => $request->get('positionMap'),
+                        'position_map' => $request->get('position_map'),
                         'status' => $request->get('status'),
                         'rent' => $request->get('rent'),
                         'surface' => $request->get('surface'),

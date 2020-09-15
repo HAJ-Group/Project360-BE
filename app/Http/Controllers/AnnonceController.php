@@ -13,7 +13,7 @@ class AnnonceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'getPremiumAnnonces', 'getAnnoncesByFilters', 'getAnnoncesUser', 'getAnnoncesAnnoncer', 'show']]);
     }
 
     /**
@@ -65,6 +65,10 @@ class AnnonceController extends Controller
         return response()->json($annoncer->user);
     }
 
+    public function getAnnoncesAnnoncer($id) {
+        $annonce = Annonce::find($id);
+        return response()->json($annonce->annoncer);
+    }
     /**
      * Store a newly created resource in storage.
      *
