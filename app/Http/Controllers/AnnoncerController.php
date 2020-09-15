@@ -71,7 +71,7 @@ class AnnoncerController extends Controller
      * @return int
      */
     public function setImage(Request $request, $id) {
-        $path = 'profiles-images/' .$id ;
+        $path = 'profiles-images/'.Auth::user()->username.'/'.$id ;
         if($request->hasFile('image')) {
             $file = $request->file('image');
             $name = $file->getClientOriginalName();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Annonce;
 use App\Annoncer;
 use App\Image;
+use App\Timage;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -114,6 +115,38 @@ class AnnouncerAnnounceController extends Controller
         }
         return Response()->json(['error' => "the specific user does not exist "], 404);
 
+    }
+
+
+    public function getTSTImages(Request $request, $id) {
+        $data = Timage::where('announce_id', $id)->latest()->get();
+        return response()->json(['data' => $data], 200);
+    }
+
+    public function storeTSTImages(Request $request, $announce_id) {
+        $path = 'tst-images/' .Auth::user()->username.'/'.$announce_id ;
+        if($request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            if($extension !== 'jpg' and $extension !== 'jpeg' and $extension !== 'png' and $extension !== 'gif') {
+                return response()->json('Extension is not okay', 500);
+            }
+            else {
+                $file->move($path, $name);
+                $img = $path.'/'.$name;
+                Timage::create(
+                    [
+                        'announce_id' => $announce_id,
+                        'image' => $img
+                    ]
+                );
+                return response()->json('Successfully uploaded');
+            }
+        }
+        else {
+            return 1;
+        }
     }
 
 
