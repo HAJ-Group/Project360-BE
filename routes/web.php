@@ -32,6 +32,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/{id}', 'AnnoncerController@show');
         $router->put('/{id}', 'AnnoncerController@update');
         $router->delete('/{id}', 'AnnoncerController@destroy');
+        $router->post('uimage/{id}', 'AnnoncerController@setImage');
     });
 
     $router->group(['prefix' => 'annonces'], function () use ($router) {

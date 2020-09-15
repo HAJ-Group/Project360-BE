@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Annonce;
+use App\Annoncer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -112,7 +113,6 @@ class AnnonceController extends Controller
         $annonce->images;
         return response()->json(['status' => 'success', 'data' => $annonce], 200);
     }
-
 
     /**
      * Update the specified resource in storage.

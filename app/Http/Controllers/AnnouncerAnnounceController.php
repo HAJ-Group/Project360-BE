@@ -145,7 +145,7 @@ class AnnouncerAnnounceController extends Controller
                 ]
             );
 
-            $i ++;
+            $i++;
         }
 
         if ($i != 1 )
@@ -313,7 +313,7 @@ class AnnouncerAnnounceController extends Controller
             'rent' => 'required|max:100',
             'surface' => 'required|numeric|min:0',
             'pieces' => 'required|numeric|min:0',
-            'rooms' => 'required|numeric|min:0'
+            'rooms' => 'numeric|min:0'
         ];
 
         $this->validate($request, $rules);
