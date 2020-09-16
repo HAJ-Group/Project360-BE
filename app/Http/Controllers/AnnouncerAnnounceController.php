@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Annonce;
 use App\Annoncer;
 use App\Image;
+use App\Timage;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -117,6 +118,38 @@ class AnnouncerAnnounceController extends Controller
     }
 
 
+    public function getTSTImages(Request $request, $id) {
+        $data = Timage::where('announce_id', $id)->latest()->get();
+        return response()->json(['data' => $data], 200);
+    }
+
+    public function storeTSTImages(Request $request, $announce_id) {
+        $path = 'tst-images/' .Auth::user()->username.'/'.$announce_id ;
+        if($request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            if($extension !== 'jpg' and $extension !== 'jpeg' and $extension !== 'png' and $extension !== 'gif') {
+                return response()->json('Extension is not okay', 500);
+            }
+            else {
+                $file->move($path, $name);
+                $img = $path.'/'.$name;
+                Timage::create(
+                    [
+                        'announce_id' => $announce_id,
+                        'image' => $img
+                    ]
+                );
+                return response()->json('Successfully uploaded');
+            }
+        }
+        else {
+            return 1;
+        }
+    }
+
+
     public function storeImages(Request $request, $username, $announce_id){
         $uploadPath = "announces-images/" . $username . "/" . $announce_id;
         $i = 1;
@@ -145,7 +178,7 @@ class AnnouncerAnnounceController extends Controller
                 ]
             );
 
-            $i ++;
+            $i++;
         }
 
         if ($i != 1 )
@@ -313,7 +346,7 @@ class AnnouncerAnnounceController extends Controller
             'rent' => 'required|max:100',
             'surface' => 'required|numeric|min:0',
             'pieces' => 'required|numeric|min:0',
-            'rooms' => 'required|numeric|min:0'
+            'rooms' => 'numeric|min:0'
         ];
 
         $this->validate($request, $rules);

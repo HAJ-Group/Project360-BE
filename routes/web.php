@@ -32,6 +32,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/{id}', 'AnnoncerController@show');
         $router->put('/{id}', 'AnnoncerController@update');
         $router->delete('/{id}', 'AnnoncerController@destroy');
+        $router->post('uimage/{id}', 'AnnoncerController@setImage');
     });
 
     $router->group(['prefix' => 'annonces'], function () use ($router) {
@@ -46,6 +47,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/{id}', 'AnnonceController@show');
         $router->put('/{id}', 'AnnonceController@update');
         $router->delete('/{id}', 'AnnonceController@destroy');
+
     });
 
     $router->group(['prefix' => 'users/'], function () use ($router) {
@@ -54,6 +56,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@show');
         $router->put('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@update');
         $router->delete('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@destroy');
+        $router->post('utstimage/{id}', 'AnnouncerAnnounceController@storeTSTImages');
+        $router->get('gtstimage/{id}', 'AnnouncerAnnounceController@getTSTImages');
     });
 
 
@@ -87,3 +91,6 @@ $router->group(['prefix' => 'socialite'], function () use ($router) {
     $router->get('login/google/callback', ['uses' => 'Auth\LoginGoogleController@handleProviderCallback']);
 
 });
+
+
+
