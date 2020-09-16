@@ -60,7 +60,34 @@ class AnnoncerController extends Controller
             Annoncer::find($annoncer->id)->update(['email' => $user->email]);
             return response()->json(['status' => 'success', 'data' => $annoncer], 201);
         } else {
-            return response()->json(['status' => 'error'], 500);
+            return response()->json(['status' => 'error while updating data'], 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $username
+     * @param $id
+     * @return int
+     */
+    public function setImage(Request $request, $id) {
+        $path = 'profiles-images/'.Auth::user()->username.'/'.$id ;
+        if($request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            if($extension !== 'jpg' and $extension !== 'jpeg' and $extension !== 'png' and $extension !== 'gif') {
+                return response()->json('dfhjeilfh', 500);
+            }
+            else {
+                $file->move($path, $name);
+                $img = $path.'/'.$name;
+                Annoncer::find($id)->update(['picture' => $img]);
+                return response()->json($img);
+            }
+        }
+        else {
+            return 1;
         }
     }
 
@@ -94,22 +121,24 @@ class AnnoncerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $announcer = Annoncer::findOrFail($id);
-        if(Auth::id() == $announcer->user_id){
-            if (empty($announcer)) {
-                return response()->json(['status' => 'error', 'message' => 'the announcer is not found'], 404);
-            }
-            $validation = $this->validateRequest($request);
-            if ($validation->fails()) {
-                return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
-            }
+        $annoncer = Annoncer::findOrFail($id);
+        if (empty($annoncer)) {
+            return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
+        }
 
-            $c = $this->annoncerFromRequest($request, $announcer);
-            if ($c->update()) {
-                return response()->json(['status' => 'success', 'data' => $c], 201);
-            } else {
-                return response()->json(['status' => 'error'], 500);
-            }
+        $validation = $this->validateRequest($request);
+
+        if ($validation->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
+        }
+
+        $c = $this->annoncerFromRequest($request, $annoncer);
+
+        if ($c->update()) {
+            return response()->json(['status' => 'success', 'data' => $c], 201);
+
+        } else {
+            return response()->json(['status' => 'error'], 500);
         }
     }
 

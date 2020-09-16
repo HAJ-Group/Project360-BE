@@ -79,6 +79,7 @@ $app->middleware([
 
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
+     'cors' => App\Http\Middleware\CorsMiddleware::class
  ]);
 
 /*
@@ -97,7 +98,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
-$app->register( \Laravel\Socialite\SocialiteServiceProvider::class);
+//$app->register( \Laravel\Socialite\SocialiteServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
