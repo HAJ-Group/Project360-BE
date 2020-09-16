@@ -91,3 +91,6 @@ $router->group(['prefix' => 'socialite'], function () use ($router) {
     $router->get('login/google/callback', ['uses' => 'Auth\LoginGoogleController@handleProviderCallback']);
 
 });
+
+
+
