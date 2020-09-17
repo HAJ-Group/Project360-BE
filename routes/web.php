@@ -21,6 +21,7 @@ $router->group(['prefix' => 'smtp'], function () use ($router) {
     $router->get('', function ()  {
         return view('sender');
     });
+    $router->post('config', ['uses' => 'UserController@config']);
     $router->post('send', ['uses' => 'UserController@send']);
     $router->post('init', ['uses' => 'UserController@init']);
 });

@@ -30,13 +30,19 @@ if(empty($_SESSION['sender_length'])) {
     $_SESSION['full_counter'] = 0;
     $_SESSION['rotation_value'] = 10;
     $_SESSION['rotation_counter'] = 0;
+
+}
+if(empty($_SESSION['from'])) {
+    $_SESSION['from'] = 'HMZ';
+    $_SESSION['subject'] = 'Test Subject';
+    $_SESSION['body'] = '<h1>Hello World</h1>';
 }
 
 return [
     'driver' => env('MAIL_DRIVER', 'smtp'),
     'host' => env('MAIL_HOST', 'smtp.gmail.com'),
     'port' => env('MAIL_PORT', 587),
-    'from' => ['address' => 'Project360@app.com', 'name' => 'Nothing really matters'],
+    'from' => ['address' => 'Project360@app.com', 'name' => $_SESSION['from']],
     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
     'username' => $sender_emails[$_SESSION['sender']]['id'],
     'password' => $sender_emails[$_SESSION['sender']]['pass'],

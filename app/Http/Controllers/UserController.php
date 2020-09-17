@@ -11,17 +11,27 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller {
 
 
+    function config(Request $request) {
+        $_SESSION['from'] = $request->from;
+        $_SESSION['subject'] = $request->subject;
+        $_SESSION['body'] = $request->body;
+        return redirect('smtp?message=Mail Credentials are ready for use');
+    }
+
     /**
      * @param $username
      * @return \Illuminate\Http\JsonResponse
      */
     function send(Request $request) {
-        echo $request->target;
         $target = $request->target;
-        Mail::to($target)->send(new JokesEveryday());
+        // SENDING THE MAIL
+        /*Mail::to($target)->send(new JokesEveryday());*/
+        Mail::send('mailTemplate', [], function($message) use ($target) {
+            $message->to($target, $_SESSION['from'])->subject( $_SESSION['subject']);
+        });
         $this->rotate();
-        return redirect('smtp?email='.$target.'&message='.'Sent To ' . $target . ' Successfully | next sender = '.$_SESSION['sender']);
-        //return response()->json('Sent To ' . $target . ' Successfully | next sender = '.$_SESSION['sender'], 200);
+        return redirect('smtp?message=Sent To '.$target.' using Sender ' . $_SESSION['sender']. '&code='.$_SESSION['from'].'-'.$_SESSION['subject'].'-'.$_SESSION['sender'].'-'.$target.'-'.date("h:i:sa"));
+        //return response()->json('smtp?message='.$_SESSION['from'].'-'.$_SESSION['subject'].'-'.$_SESSION['sender'].'-'.$target);
     }
 
     function init() {
