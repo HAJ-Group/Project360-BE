@@ -34,9 +34,9 @@ class CorsMiddleware
         {
             $response->header($key, $value);
         }
-        if($request->action === 'allow') {
-            return $next($request);
-        }
+//        if($request->action === 'allow') {
+//            return $next($request);
+//        }
         return $response;
 
          $handle = $next($request);
