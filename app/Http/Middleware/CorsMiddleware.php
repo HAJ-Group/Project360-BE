@@ -15,9 +15,7 @@ class CorsMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if($request->action === 'allow') {
-            return $next($request);
-        }
+
        $headers = [
             'Access-Control-Allow-Origin'      => '*',
             'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE,PATCH',
@@ -36,7 +34,9 @@ class CorsMiddleware
         {
             $response->header($key, $value);
         }
-
+        if($request->action === 'allow') {
+            return $next($request);
+        }
         return $response;
 
          $handle = $next($request);
