@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Annonce;
 use App\Annoncer;
+use App\Favorite;
 use App\Image;
 use App\Timage;
 use App\User;
@@ -21,7 +22,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('auth', ['except' => ['store','getTSTImages']]);
     }
 
     /**
@@ -54,6 +55,7 @@ class AnnouncerAnnounceController extends Controller
         return Response()->json(['error' => "the specific user does not exist "], 404);
 
     }
+
 
     /**
      * download images for a specific announce the specified resource.

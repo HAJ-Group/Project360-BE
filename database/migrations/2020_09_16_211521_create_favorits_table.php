@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateImagesTable extends Migration
+class CreateFavoritsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreateImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('favorits', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('type');
-            $table->unsignedInteger('annonce_id')->nullable();
+
+            $table->integer('annonce_id')->unsigned();
             $table->foreign('annonce_id')->references('id')->on('annonces');
+
+
+            $table->unsignedBigInteger('annoncer_id');
+            $table->foreign('annoncer_id')->references('id')->on('annoncers');
+
             $table->timestamps();
         });
     }
@@ -32,6 +36,6 @@ class CreateImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('favorits');
     }
 }

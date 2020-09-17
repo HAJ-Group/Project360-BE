@@ -58,6 +58,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@destroy');
         $router->post('utstimage/{id}', 'AnnouncerAnnounceController@storeTSTImages');
         $router->get('gtstimage/{id}', 'AnnouncerAnnounceController@getTSTImages');
+        $router->get('{username}/favorites', 'FavoriteAnnounceController@index');
     });
 
 
@@ -91,6 +92,5 @@ $router->group(['prefix' => 'socialite'], function () use ($router) {
     $router->get('login/google/callback', ['uses' => 'Auth\LoginGoogleController@handleProviderCallback']);
 
 });
-
 
 
