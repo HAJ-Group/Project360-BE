@@ -17,4 +17,7 @@ class Annoncer extends Model
     public function annonces() {
         return $this->hasMany(Annonce::class);
     }
+    public function favs() {
+        return $this->hasMany(Annonce::class);
+    }
 }

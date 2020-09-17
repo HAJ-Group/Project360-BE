@@ -11,7 +11,7 @@ class ExampleController extends Controller
      */
     public function __construct()
     {
-        //
+        // this is an example for laravel controller
     }
 
     //

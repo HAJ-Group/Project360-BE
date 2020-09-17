@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Annonce;
 use App\Annoncer;
 use App\User;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -14,9 +13,10 @@ use Illuminate\Support\Str;
 class AnnoncerController extends Controller
 {
 
+
     public function __construct()
     {
-       // $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -26,6 +26,15 @@ class AnnoncerController extends Controller
      */
     public function index()
     {
+     /*$user = new User();
+        $user->username = 'rhita';
+        $user->password = 'rhita12345';
+        $user->email = 'rhitaess@gmail.com';
+        $user->token = Str::random(40);
+        $user->role = '2';
+        $user->active = 1;
+        $user->save();
+        return $user;*/
         return response()->json(['status' => 'success', 'data', Annoncer::all(), 200]);
     }
 
@@ -45,15 +54,40 @@ class AnnoncerController extends Controller
         }
         $user = Auth::user();
         $annoncer = Annoncer::create($request->all());
-
-
         //link between User & Annoncer
         $user->annoncer()->save($annoncer);
         if ($annoncer->save()) {
             Annoncer::find($annoncer->id)->update(['email' => $user->email]);
             return response()->json(['status' => 'success', 'data' => $annoncer], 201);
         } else {
-            return response()->json(['status' => 'error'], 500);
+            return response()->json(['status' => 'error while updating data'], 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $username
+     * @param $id
+     * @return int
+     */
+    public function setImage(Request $request, $id) {
+        $path = 'profiles-images/'.Auth::user()->username.'/'.$id ;
+        if($request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            if($extension !== 'jpg' and $extension !== 'jpeg' and $extension !== 'png' and $extension !== 'gif') {
+                return response()->json('dfhjeilfh', 500);
+            }
+            else {
+                $file->move($path, $name);
+                $img = $path.'/'.$name;
+                Annoncer::find($id)->update(['picture' => $img]);
+                return response()->json($img);
+            }
+        }
+        else {
+            return 1;
         }
     }
 
@@ -73,8 +107,7 @@ class AnnoncerController extends Controller
         return response()->json(['status' => 'success', 'data' => $annoncer], 200);
     }
 
-    public function getUserAnnouncer()
-    {
+    public function getUserAnnouncer() {
         $user = Auth::user();
         return response()->json($user->annoncer);
     }
@@ -87,30 +120,26 @@ class AnnoncerController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
-    {        return response()->json($request->all());
+    {
+        $annoncer = Annoncer::findOrFail($id);
+        if (empty($annoncer)) {
+            return response()->json(['status' => 'error', 'message' => 'the annoncer is not found'], 404);
+        }
 
-        $announcer = Annoncer::findOrFail($id);
-        if (Auth::id() == $announcer->user_id) {
-            if (empty($announcer)) {
-                return response()->json(['status' => 'error', 'message' => 'the announcer is not found'], 404);
-            }
-            $validation = $this->validateRequest($request);
-            if ($validation->fails()) {
-                return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
-            }
-            else{
-                $c = $this->annoncerFromRequest($request, $announcer);
-                if ($c->update()) {
-                    return response()->json(['status' => 'success', 'data' => $c], 201);
-                }
-                else {
-                    return response()->json(['status' => 'error'], 500);
-                }
-            }
+        $validation = $this->validateRequest($request);
+
+        if ($validation->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validation->errors()], 422);
+        }
+
+        $c = $this->annoncerFromRequest($request, $annoncer);
+
+        if ($c->update()) {
+            return response()->json(['status' => 'success', 'data' => $c], 201);
+
         } else {
             return response()->json(['status' => 'error'], 500);
         }
-
     }
 
     /**
@@ -154,44 +183,8 @@ class AnnoncerController extends Controller
         $annoncer->address = $request->address;
         $annoncer->city = $request->city;
         // $annoncer->email = $request->email;
-           $this->uploadImage($request,$annoncer);
+        $annoncer->picture = $request->picture;
         $annoncer->date_of_birth = $request->date_of_birth;
         return $annoncer;
-    }
-    public function uploadImage(Request $request,$announcer)
-    {
-        $response = null;
-        if ($request->hasFile('picture')) {
-            $original_filename = $request->file('picture')->getClientOriginalName();
-            $original_filename_arr = explode('.', $original_filename);
-            $file_ext = end($original_filename_arr);
-            $destination_path = 'assets/images/announcers';
-            $image = 'U-' . time() . '.' . $file_ext;
-
-            if ($request->file('picture')->move($destination_path, $image)) {
-                $announcer->picture = 'assets/images/announcers' . $image;
-                return $this->responseRequestSuccess($announcer);
-            } else {
-                $announcer->picture = 'hahaha';
-                return $this->responseRequestError('Cannot upload file');
-            }
-        } else {
-            $announcer->picture = 'mouhaha';
-            return $this->responseRequestError('File not found');
-        }
-    }
-
-    protected function responseRequestSuccess($ret)
-    {
-        return response()->json(['status' => 'success', 'data' => $ret], 200)
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    }
-
-    protected function responseRequestError($message = 'Bad request', $statusCode = 200)
-    {
-        return response()->json(['status' => 'error', 'error' => $message], $statusCode)
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 }

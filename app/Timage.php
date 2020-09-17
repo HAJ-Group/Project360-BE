@@ -6,9 +6,9 @@ use Illuminate\Auth\Authenticatable as Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Visitor extends Model implements Authenticatable
-{
 
+class Timage extends Model implements Authenticatable
+{
     use Auth;
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,7 @@ class Visitor extends Model implements Authenticatable
      * @var array
      */
     protected $fillable = [
-        'firstName', 'lastName','email','birthday','phone','address','city','photo','userID'
+        'announce_id', 'image',
     ];
 
     /**
@@ -25,9 +25,13 @@ class Visitor extends Model implements Authenticatable
      * @var array
      */
     protected $hidden = [
-        '',
+
     ];
-    public function user(){
-        return $this->hasOne('App\User','id');
+
+    // RELATIONS
+
+    public function announce() {
+        return $this->belongsTo(Annonce::class);
     }
+
 }
