@@ -50,7 +50,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     });
 
-    $router->group(['prefix' => 'users/'], function () use ($router) {
+    $router->group(['prefix' => 'users/', 'middleware' => 'cors'], function () use ($router) {
         $router->get('{username}/announces', 'AnnouncerAnnounceController@index');
         $router->post('{username}/announces', 'AnnouncerAnnounceController@store');
         $router->get('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@show');
@@ -58,6 +58,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('{username}/announces/{announce_id}', 'AnnouncerAnnounceController@destroy');
         $router->post('utstimage/{id}', 'AnnouncerAnnounceController@storeTSTImages');
         $router->get('gtstimage/{id}', 'AnnouncerAnnounceController@getTSTImages');
+        $router->get('test', 'AnnouncerAnnounceController@downloadImages');
     });
 
 

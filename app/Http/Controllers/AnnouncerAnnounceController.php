@@ -9,8 +9,6 @@ use App\Timage;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -21,7 +19,7 @@ class AnnouncerAnnounceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('auth', ['except' => ['store', 'getTSTImages']]);
     }
 
     /**
@@ -119,8 +117,15 @@ class AnnouncerAnnounceController extends Controller
 
 
     public function getTSTImages(Request $request, $id) {
+        $headers =[
+            'Content-Description' => 'File Transfer',
+            'Content-Type' => 'image/*',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods'=> 'POST, GET, OPTIONS, PUT, DELETE'
+        ];
         $data = Timage::where('announce_id', $id)->latest()->get();
-        return response()->json(['data' => $data], 200);
+        // return response()->json(['data' => $data], 200);
+        return response()->download($data[0]->image, 'image', $headers);
     }
 
     public function storeTSTImages(Request $request, $announce_id) {
