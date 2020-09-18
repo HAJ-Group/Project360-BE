@@ -37,6 +37,19 @@
                     <i class="material-icons text-muted" style="font-size: 80px">contact_mail</i>
                     <h1 class="text-primary p-5">SENDER</h1>
                 </div>
+                <div style="width: 100%; height: 400px; overflow: auto">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sender</th>
+                            <th scope="col">Sender Email</th>
+                            <th scope="col">Queue</th>
+                            <th scope="col">Target Sends</th>
+                        </tr>
+                        </thead>
+                        <tbody id="gen"></tbody>
+                    </table>
+                </div>
                 <hr>
                 <form style="display: none" method="post" action="smtp/send">
                     <input id="email" required type="email" name="target" placeholder="email">
@@ -96,19 +109,6 @@
                     <h1 class="text-primary p-5">REPORTS</h1>
                 </div>
                 <label>Plan :</label>
-                <div style="width: 100%; height: 400px; overflow: auto">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th scope="col">Sender</th>
-                            <th scope="col">Sender Email</th>
-                            <th scope="col">Queue</th>
-                            <th scope="col">Target Sends</th>
-                        </tr>
-                        </thead>
-                        <tbody id="gen"></tbody>
-                    </table>
-                </div>
                 <hr>
                 <div class="d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
@@ -124,25 +124,24 @@
                         <h1 id="S" class="text-center text-success" style="font-size: 150px">0</h1>
                     </div>
                 </div>
-                <table class="table table-striped table-dark">
-                    <thead>
-                    <tr>
-                        <th scope="col">From</th>
-                        <th scope="col">Subject</th>
-                        <th scope="col">Sender</th>
-                        <th scope="col">Target</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody id="stats">
-                    </tbody>
-                </table>
-
             </div>
             <form onsubmit="localStorage.clear(); sessionStorage.removeItem('stats'); sessionStorage.removeItem('list')" class="d-flex justify-content-center" method="post" action="smtp/init">
                 <input id="reset" class="btn btn-warning text-white" style="width: 300px" type="submit" value="reset">
             </form>
+            <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">From</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Sender</th>
+                    <th scope="col">Target</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody id="stats">
+                </tbody>
+            </table>
         </div>
         <!-- FOOTER -->
         <div id="footer" class="container p-4">
