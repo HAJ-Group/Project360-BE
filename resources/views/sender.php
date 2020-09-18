@@ -128,20 +128,23 @@
             <form onsubmit="localStorage.clear(); sessionStorage.removeItem('stats'); sessionStorage.removeItem('list')" class="d-flex justify-content-center" method="post" action="smtp/init">
                 <input id="reset" class="btn btn-warning text-white" style="width: 300px" type="submit" value="reset">
             </form>
-            <table id="show-in-reports" class="table table-striped table-dark">
-                <thead>
-                <tr>
-                    <th scope="col">From</th>
-                    <th scope="col">Subject</th>
-                    <th scope="col">Sender</th>
-                    <th scope="col">Target</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Status</th>
-                </tr>
-                </thead>
-                <tbody id="stats">
-                </tbody>
-            </table>
+            <div id="show-in-reports">
+                <table class="table table-striped table-dark">
+                    <thead>
+                    <tr>
+                        <th scope="col">From</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Sender</th>
+                        <th scope="col">Target</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody id="stats">
+                    </tbody>
+                </table>
+            </div>
+
         </div>
         <!-- FOOTER -->
         <div id="footer" class="container p-4">
@@ -174,9 +177,7 @@
             document.getElementById('nav-' + v).classList.remove('active');
             document.getElementById('show-in-reports').style.display = 'none';
         }
-        if(view === 'reports') {
-            document.getElementById('show-in-reports').style.display = 'block';
-        }
+        if(view === 'reports') document.getElementById('show-in-reports').style.display = 'block';
         document.getElementById(view).style.display = 'block';
         document.getElementById('nav-' + view).classList.add('active');
         sessionStorage.setItem('view', view);
