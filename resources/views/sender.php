@@ -128,7 +128,7 @@
             <form onsubmit="localStorage.clear(); sessionStorage.removeItem('stats'); sessionStorage.removeItem('list')" class="d-flex justify-content-center" method="post" action="smtp/init">
                 <input id="reset" class="btn btn-warning text-white" style="width: 300px" type="submit" value="reset">
             </form>
-            <table class="table table-striped table-dark">
+            <table id="show-in-reports" class="table table-striped table-dark">
                 <thead>
                 <tr>
                     <th scope="col">From</th>
@@ -172,6 +172,10 @@
         for(let v of ['send', 'config', 'reports']) {
             document.getElementById(v).style.display = 'none';
             document.getElementById('nav-' + v).classList.remove('active');
+            document.getElementById('show-in-reports').style.display = 'none';
+        }
+        if(view === 'reports') {
+            document.getElementById('show-in-reports').style.display = 'block';
         }
         document.getElementById(view).style.display = 'block';
         document.getElementById('nav-' + view).classList.add('active');
