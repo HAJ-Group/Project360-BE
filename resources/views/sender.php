@@ -56,6 +56,7 @@
                     <input id="submit" type="submit" value="send">
                 </form>
                 <div class="form-group" style="margin: auto">
+                    <label>Target emails : </label>
                     <textarea class="form-control rounded text-center mb-3" id="list" value="" required rows="10" placeholder="email1, email2, email3,...." style="overflow: auto; width: 100%" name="list"></textarea>
                     <p class="text-center"><button class="btn btn-success m-2 text-white" style="width: 300px" type="submit" value="send" onclick="robotSender()">Send</button></p>
                 </div>
