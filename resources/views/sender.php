@@ -53,24 +53,61 @@
                     <i class="material-icons text-muted" style="font-size: 80px">settings</i>
                     <h1 class="text-primary p-5">CONFIG</h1>
                 </div>
-                <hr>
                 <div class="form-group" style="margin: auto">
-                    <form method="post" action="smtp/config">
-                        <input name="from" class="form-control rounded text-center" required placeholder="Mail From: example:HMZ" style="width: 100%"><br>
-                        <input name="subject" class="form-control rounded text-center" required placeholder="Mail Subject: example:Test Subject" style="width: 100%"><br>
-                        <textarea name="body" class="form-control rounded text-center mb-3" id="list" value="" required rows="10" placeholder="Mail Body: exmaple:<body><div>....</body>" style="overflow: auto; width: 100%"></textarea>
+                    <form onsubmit="sessionStorage.setItem('delivery', document.getElementById('sd').value)" method="post" action="smtp/config">
+                        <div id="sender-delivery">
+                            <h1><i class="material-icons" style="font-size: 50px; color: red">send</i> Senders</h1>
+                            <hr>
+                            <label>Start Sender :</label>
+                            <select id="select" name="ss" class="form-control rounded text-center" style="text-align-last:center;">
+                                <?php
+                                    $length = (integer)$_SESSION['sender_length'];
+                                    for ($i = 0; $i<$length; $i++) {
+                                        if($i === $_SESSION['sender']) {
+                                ?>
+                                        <option selected value="<?=$i?>"><?=$i?></option>
+                                        <?php } else { ?>
+                                        <option value="<?=$i?>"><?=$i?></option>
+                                <?php } }?>
+                            </select>
+                            <label>Rotation Per Mail :</label>
+                            <input id="rv" value="<?=isset($_SESSION['rotation_value']) ? $_SESSION['rotation_value'] : ''?>" name="rv" class="form-control rounded text-center" required placeholder="Rotation per mail: example:5" style="width: 100%"><br>
+                            <label>Sender emails :</label>
+                            <textarea id="sd" name="senders" class="form-control rounded text-center mb-3" required rows="10" placeholder="Mail Senders: exmaple:email1:pass1|email2:pass2|..." style="overflow: auto; width: 100%"><?=isset($_SESSION['sender-delivery']) ? $_SESSION['sender-delivery'] : ''?></textarea>
+                        </div>
+                        <br>
+                        <div id="compose">
+                            <h1><i class="material-icons" style="font-size: 50px; color: red">send</i> Compose</h1>
+                            <hr>
+                            <label>From :</label>
+                            <input value="<?=isset($_SESSION['from']) ? $_SESSION['from'] : ''?>" name="from" class="form-control rounded text-center" required placeholder="Mail From: example:HMZ" style="width: 100%"><br>
+                            <label>Subject :</label>
+                            <input value="<?=isset($_SESSION['subject']) ? $_SESSION['subject'] : ''?>" name="subject" class="form-control rounded text-center" required placeholder="Mail Subject: example:Test Subject" style="width: 100%"><br>
+                            <label>Body :</label>
+                            <textarea name="body" class="form-control rounded text-center mb-3" id="list" value="" required rows="10" placeholder="Mail Body: exmaple:<body><div>....</body>" style="overflow: auto; width: 100%"><?=isset($_SESSION['body']) ? $_SESSION['body'] : ''?></textarea>
+                        </div>
                         <p class="text-center"><input class="btn text-white" style="width: 300px; background-color: deepskyblue" type="submit" value="Save"></p>
                     </form>
-
                 </div>
-
-
-
             </div>
             <div id="reports" class="container">
                 <div class="d-flex justify-content-center">
                     <i class="material-icons text-muted" style="font-size: 80px">analytics</i>
                     <h1 class="text-primary p-5">REPORTS</h1>
+                </div>
+                <label>Plan :</label>
+                <div style="width: 100%; height: 400px; overflow: auto">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sender</th>
+                            <th scope="col">Sender Email</th>
+                            <th scope="col">Queue</th>
+                            <th scope="col">Target Sends</th>
+                        </tr>
+                        </thead>
+                        <tbody id="gen"></tbody>
+                    </table>
                 </div>
                 <hr>
                 <div class="d-flex justify-content-center">
@@ -79,7 +116,7 @@
                         <h1 id="CD" class="text-center text-danger" style="font-size: 150px">0</h1>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <p class="text-center">EMAILS</p>
+                        <p class="text-center">SENDS</p>
                         <h1 id="FC" class="text-center text-primary" style="font-size: 150px">0</h1>
                     </div>
                     <div class="d-flex justify-content-center">
@@ -103,7 +140,7 @@
                 </table>
 
             </div>
-            <form onsubmit="localStorage.clear(); sessionStorage.removeItem('stats')" class="d-flex justify-content-center" method="post" action="smtp/init">
+            <form onsubmit="localStorage.clear(); sessionStorage.removeItem('stats'); sessionStorage.removeItem('list')" class="d-flex justify-content-center" method="post" action="smtp/init">
                 <input id="reset" class="btn btn-warning text-white" style="width: 300px" type="submit" value="reset">
             </form>
         </div>
@@ -122,17 +159,11 @@
 
 <!--JAVASCRIPT CODE-->
 <script>
-    $updater = setInterval(update, 1000);
-    function update() {
-        if(sessionStorage.getItem('view') === 'reports' && document.getElementById('CD').innerText !== '0'){
-            location.reload();
-        }
-    }
-
     function testServer() {
         document.getElementById('email').value = 'alaouiismaili28@gmail.com';
         document.getElementById('submit').click();
     }
+
     /**
      * View toggling
      * @param view
@@ -158,6 +189,31 @@
         }
         else {
             show('send');
+        }
+        if(sessionStorage.getItem('emails') !== null) {
+            document.getElementById('list').innerText = sessionStorage.getItem('emails');
+        }
+        if(sessionStorage.getItem('delivery') !== null) {
+            document.getElementById('sd').innerText = sessionStorage.getItem('delivery');
+            let g = document.getElementById('gen');
+            let select = document.getElementById('select');
+            let rv = document.getElementById('rv').value;
+            let chosen = select.options[select.selectedIndex].value;
+            let data = sessionStorage.getItem('delivery').split('|');
+            let i = 0;
+            for(let d of data) {
+                let queue_status = (i === parseInt(chosen)) ? 'Ready' : 'In Queue';
+                let style = (i === parseInt(chosen)) ? 'primary' : 'muted';
+                let target = parseInt(rv);
+                let email = d.split(':')[0];
+                g.innerHTML +=
+                    '<tr>\n' +
+                        '<td class="text-' + style + '">' + i++ + '</td>\n' +
+                        '<td class="text-' + style + '">' + email + '</th>\n' +
+                        '<td class="text-' + style + '">' + queue_status + '</th>\n' +
+                        '<td>' + target + '</th>\n' +
+                    '</tr>'
+            }
         }
         // Load Stats
         try {
@@ -214,8 +270,8 @@
         console.log('Robot Started...');
         localStorage.clear();
         let data = document.getElementById('list').value;
+        sessionStorage.setItem('emails', data);
         let emails = data.split(',');
-        console.log(emails);
         let i = 0;
         for(let e of emails) {
             localStorage.setItem('email-' + (++i), e);

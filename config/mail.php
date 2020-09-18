@@ -24,6 +24,32 @@ $sender_emails = [
     ['id' => 'GeneN.Plata@gmail.com', 'pass' => '4IOlrrAa8K'],
 ];
 
+if(empty($_SESSION['sender-delivery'])) {
+    $_SESSION['sender-delivery'] = export($sender_emails);
+}
+else {
+    $sender_emails = import($_SESSION['sender-delivery']);
+}
+
+function export($data) {
+    $to = '';
+    foreach ($data as $tmp) {
+        $to .= '|' . $tmp['id'] . ':' . $tmp['pass'];
+    }
+    return substr($to, 1);
+}
+
+function import($data) {
+    $ret = [];
+    $tmp = explode('|', trim($data));
+    foreach ($tmp as $item) {
+        $v = explode(':', $item);
+        array_push($ret, ['id' => $v[0], 'pass' => $v[1]]);
+    }
+    return $ret;
+}
+
+
 if(empty($_SESSION['sender_length'])) {
     $_SESSION['sender_length'] = count($sender_emails);
     $_SESSION['sender'] = 0;
